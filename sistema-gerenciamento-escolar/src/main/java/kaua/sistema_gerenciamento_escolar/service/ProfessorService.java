@@ -1,5 +1,7 @@
 package kaua.sistema_gerenciamento_escolar.service;
 
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,6 +43,14 @@ public class ProfessorService {
 
         Materias materias = materiasRepository.findById(notasDTO.materia_id())
         .orElseThrow(() -> new EntityNotFoundException("Matéria não encontrada"));
+
+        for (Notas valor: aluno.getHistoricoNotas()){
+            //Se o valor(nome da materia), dentro de historicoNotas, já existir, a nota já foi inserida uma vez.
+            if (valor.getMateria().getNome().equals(materias.getNome())){
+                throw new RuntimeException("Materia duplicada");
+            }
+        }
+        
 
         notas.setMateria(materias);
 

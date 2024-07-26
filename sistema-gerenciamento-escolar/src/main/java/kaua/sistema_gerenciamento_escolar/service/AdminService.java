@@ -45,7 +45,6 @@ public class AdminService {
         aluno.setSenha(alunoDTO.senha());    
 
         Set<Materias> materias = new HashSet<>(materiasRepository.findAllById(alunoDTO.matricula_id()));
-        System.out.println("Materias encontradas: "+ materias);
         aluno.setMateriasMatriculadas(materias);
 
         for (Materias materia: materias){
@@ -84,5 +83,22 @@ public class AdminService {
         return professorRepository.save(professor);
     }
 
-    
+    @Transactional
+    public Aluno adicionarMateriaAluno(Integer aluno_id, Set<Integer> materia_id){
+        Aluno aluno = alunoRepository.findById(aluno_id)
+        .orElseThrow(() -> new EntityNotFoundException("Aluno nao encontrado"));
+ 
+        Set<Materias> materias = new HashSet<>(materiasRepository.findAllById(materia_id));
+        if (materias.size() != materia_id.size()){
+            throw new EntityNotFoundException("Materias não encontradas");
+        }
+
+        aluno.setMateriasMatriculadas(materias);
+
+        for (Materias materia : materias){
+            materia.getAlunos().add(aluno);
+        }
+
+        return alunoRepository.save(aluno);
+    }
 }

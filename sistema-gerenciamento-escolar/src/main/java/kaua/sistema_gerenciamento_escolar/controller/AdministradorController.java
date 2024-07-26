@@ -3,11 +3,14 @@ package kaua.sistema_gerenciamento_escolar.controller;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,31 +35,22 @@ public class AdministradorController {
 
     @PostMapping("/salvarAluno")
     public ResponseEntity<?> criarAluno(@RequestBody AlunoDTO alunoDTO){
-        try{
-            return ResponseEntity.status(HttpStatus.CREATED).body(adminService.criarAluno(alunoDTO));
-        } catch (Exception e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao salvar aluno");
-        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(alunoDTO);
     }
 
     @PostMapping("/salvarMateria")
     public ResponseEntity<?> criarMateria(@RequestBody MateriaDTO materiaDTO){
-        try{
-            return ResponseEntity.status(HttpStatus.CREATED).body(adminService.criarMateria(materiaDTO));
-        } catch(Exception e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao salvar materia");
-        }
+       return ResponseEntity.status(HttpStatus.CREATED).body(materiaDTO);
         
     }
 
     @PostMapping("/salvarProfessor")
     public ResponseEntity<?> criarProfessor(@RequestBody ProfessorDTO professorDTO){
-        try{
-            return ResponseEntity.ok(adminService.criarProfessor(professorDTO));
-        } catch (Exception e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao salvar professor");
-        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(professorDTO);
     }
 
-   
+    @PutMapping("/{aluno_id}/adicionarMateriaAluno")
+    public ResponseEntity<?> adicionarMateriaAluno(@PathVariable Integer aluno_id, @RequestBody Set<Integer> materias_id){
+        return ResponseEntity.ok(adminService.adicionarMateriaAluno(aluno_id, materias_id));
+    }
 }

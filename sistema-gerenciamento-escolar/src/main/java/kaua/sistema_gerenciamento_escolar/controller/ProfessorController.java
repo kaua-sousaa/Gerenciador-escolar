@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,13 +33,9 @@ public class ProfessorController {
         return ResponseEntity.ok(professorRepository.findAll());
     }
 
-    @PostMapping("/salvarNotas")
+    @PutMapping("/salvarNotas")
     public ResponseEntity<?> salvarNotas(@RequestBody NotasDTO notasDTO){
-        try{
-            return ResponseEntity.status(HttpStatus.CREATED).body(professorService.aplicarNotas(notasDTO));
-        } catch(Exception e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao salvar notas");
-        }
+       return ResponseEntity.ok(professorService.aplicarNotas(notasDTO));
     }
     
 }

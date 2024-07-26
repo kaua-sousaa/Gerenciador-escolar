@@ -1,5 +1,7 @@
 package kaua.sistema_gerenciamento_escolar.model;
 
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Entity;
@@ -38,4 +40,5 @@ public class Notas {
     @JoinColumn(name = "aluno_id", nullable = false)
     @JsonBackReference
     private Aluno alunos;
+
 }
