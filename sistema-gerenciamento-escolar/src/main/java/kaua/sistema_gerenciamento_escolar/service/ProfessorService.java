@@ -33,6 +33,10 @@ public class ProfessorService {
     public Notas aplicarNotas(NotasDTO notasDTO){
         Notas notas = new Notas();
      
+        if (notasDTO.nota1() < 0 || notasDTO.nota1() >10 || 
+            notasDTO.nota2() < 0 || notasDTO.nota2() > 10){
+            throw new IllegalArgumentException("A nota não pode ser menor que 0");
+        }
         notas.setNota1(notasDTO.nota1());
         notas.setNota2(notasDTO.nota2());
 
@@ -47,7 +51,7 @@ public class ProfessorService {
         for (Notas valor: aluno.getHistoricoNotas()){
             //Se o valor(nome da materia), dentro de historicoNotas, já existir, a nota já foi inserida uma vez.
             if (valor.getMateria().getNome().equals(materias.getNome())){
-                throw new RuntimeException("Materia duplicada");
+                throw new IllegalArgumentException("Materia duplicada");
             }
         }
         

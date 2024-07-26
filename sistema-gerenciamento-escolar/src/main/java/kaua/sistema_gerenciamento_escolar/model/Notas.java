@@ -1,7 +1,5 @@
 package kaua.sistema_gerenciamento_escolar.model;
 
-import java.util.Objects;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Entity;

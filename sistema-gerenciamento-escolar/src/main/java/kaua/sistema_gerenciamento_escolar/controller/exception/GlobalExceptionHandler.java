@@ -15,5 +15,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Recurso não encontrado: "+ e.getMessage());
     }
 
-    
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException e){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro na requisição: "+ e.getMessage());
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleGenericException(Exception e){
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro interno: "+ e.getMessage());
+    }
 }

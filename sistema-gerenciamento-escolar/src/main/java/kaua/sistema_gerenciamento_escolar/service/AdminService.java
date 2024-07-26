@@ -51,7 +51,6 @@ public class AdminService {
             materia.getAlunos().add(aluno);
         }   
         
-        System.out.println("Aluno salvo:" +aluno);
         return alunoRepository.save(aluno);
     }
 

@@ -3,7 +3,6 @@ package kaua.sistema_gerenciamento_escolar.controller;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +17,6 @@ import kaua.sistema_gerenciamento_escolar.dto.AlunoDTO;
 import kaua.sistema_gerenciamento_escolar.dto.MateriaDTO;
 import kaua.sistema_gerenciamento_escolar.dto.ProfessorDTO;
 import kaua.sistema_gerenciamento_escolar.model.Aluno;
-import kaua.sistema_gerenciamento_escolar.model.Professor;
 import kaua.sistema_gerenciamento_escolar.service.AdminService;
 
 @RestController
@@ -35,18 +33,18 @@ public class AdministradorController {
 
     @PostMapping("/salvarAluno")
     public ResponseEntity<?> criarAluno(@RequestBody AlunoDTO alunoDTO){
-        return ResponseEntity.status(HttpStatus.CREATED).body(alunoDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(adminService.criarAluno(alunoDTO));
     }
 
     @PostMapping("/salvarMateria")
     public ResponseEntity<?> criarMateria(@RequestBody MateriaDTO materiaDTO){
-       return ResponseEntity.status(HttpStatus.CREATED).body(materiaDTO);
+       return ResponseEntity.status(HttpStatus.CREATED).body(adminService.criarMateria(materiaDTO));
         
     }
 
     @PostMapping("/salvarProfessor")
     public ResponseEntity<?> criarProfessor(@RequestBody ProfessorDTO professorDTO){
-        return ResponseEntity.status(HttpStatus.CREATED).body(professorDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(adminService.criarProfessor(professorDTO));
     }
 
     @PutMapping("/{aluno_id}/adicionarMateriaAluno")
