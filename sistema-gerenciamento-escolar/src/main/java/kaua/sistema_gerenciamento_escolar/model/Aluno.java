@@ -43,11 +43,11 @@ public class Aluno {
     @Column(nullable = false)
     private String senha;
 
-    @ManyToMany(mappedBy = "alunos", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "alunos", fetch = FetchType.EAGER)
     @JsonManagedReference
     private Set<Materias> materiasMatriculadas = new HashSet<>();
 
-    @OneToMany(mappedBy = "alunos", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "alunos", fetch = FetchType.EAGER)
     @JsonManagedReference
     private Set<Notas> historicoNotas = new HashSet<>();
     

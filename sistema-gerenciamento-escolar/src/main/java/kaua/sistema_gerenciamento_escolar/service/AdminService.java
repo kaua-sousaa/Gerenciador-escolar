@@ -14,9 +14,11 @@ import kaua.sistema_gerenciamento_escolar.dto.MateriaDTO;
 import kaua.sistema_gerenciamento_escolar.dto.ProfessorDTO;
 import kaua.sistema_gerenciamento_escolar.model.Aluno;
 import kaua.sistema_gerenciamento_escolar.model.Materias;
+import kaua.sistema_gerenciamento_escolar.model.Notas;
 import kaua.sistema_gerenciamento_escolar.model.Professor;
 import kaua.sistema_gerenciamento_escolar.repository.AlunoRepository;
 import kaua.sistema_gerenciamento_escolar.repository.MateriasRepository;
+import kaua.sistema_gerenciamento_escolar.repository.NotasRepository;
 import kaua.sistema_gerenciamento_escolar.repository.ProfessorRepository;
 
 @Service
@@ -24,6 +26,9 @@ public class AdminService {
     
     @Autowired
     private MateriasRepository materiasRepository;
+
+    @Autowired
+    private NotasRepository notasRepository;
 
     @Autowired
     private AlunoRepository alunoRepository;
@@ -99,5 +104,20 @@ public class AdminService {
         }
 
         return alunoRepository.save(aluno);
+    }
+
+    @Transactional
+    public void excluirAluno(Integer aluno_id){
+        Aluno aluno = alunoRepository.findById(aluno_id)
+        .orElseThrow(() -> new EntityNotFoundException("Aluno nao encontrado"));
+
+        for (Materias materia : aluno.getMateriasMatriculadas()){
+            materia.getAlunos().remove(aluno);
+            materiasRepository.save(materia);
+        }
+
+        notasRepository.deleteByAlunoId(aluno_id);
+
+        alunoRepository.deleteById(aluno_id);
     }
 }

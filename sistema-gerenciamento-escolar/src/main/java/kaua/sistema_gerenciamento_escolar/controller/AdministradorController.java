@@ -6,6 +6,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -50,5 +51,11 @@ public class AdministradorController {
     @PutMapping("/{aluno_id}/adicionarMateriaAluno")
     public ResponseEntity<?> adicionarMateriaAluno(@PathVariable Integer aluno_id, @RequestBody Set<Integer> materias_id){
         return ResponseEntity.ok(adminService.adicionarMateriaAluno(aluno_id, materias_id));
+    }
+
+    @DeleteMapping("/{aluno_id}/deletarAluno")
+    public ResponseEntity<?> deletarAluno(@PathVariable Integer aluno_id){
+         adminService.excluirAluno(aluno_id);
+        return ResponseEntity.noContent().build();
     }
 }
