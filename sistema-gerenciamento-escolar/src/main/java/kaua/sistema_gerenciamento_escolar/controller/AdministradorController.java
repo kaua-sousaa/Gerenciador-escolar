@@ -27,7 +27,7 @@ public class AdministradorController {
     private AdminService adminService;
 
 
-    @GetMapping("/")
+    @GetMapping("/buscarAlunos")
     public ResponseEntity<List<Aluno>> getAluno(){
         return ResponseEntity.status(HttpStatus.OK).body(adminService.getAlunos());
     }

@@ -14,7 +14,6 @@ import kaua.sistema_gerenciamento_escolar.dto.MateriaDTO;
 import kaua.sistema_gerenciamento_escolar.dto.ProfessorDTO;
 import kaua.sistema_gerenciamento_escolar.model.Aluno;
 import kaua.sistema_gerenciamento_escolar.model.Materias;
-import kaua.sistema_gerenciamento_escolar.model.Notas;
 import kaua.sistema_gerenciamento_escolar.model.Professor;
 import kaua.sistema_gerenciamento_escolar.repository.AlunoRepository;
 import kaua.sistema_gerenciamento_escolar.repository.MateriasRepository;
