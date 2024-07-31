@@ -1,6 +1,7 @@
 package kaua.sistema_gerenciamento_escolar.model;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -49,5 +50,8 @@ public class Aluno {
     @OneToMany(mappedBy = "alunos", fetch = FetchType.EAGER)
     @JsonManagedReference
     private Set<Notas> historicoNotas = new HashSet<>();
-    
+
+    @OneToMany(mappedBy = "aluno", fetch = FetchType.EAGER)
+    @JsonManagedReference
+    private List<Faltas> faltas;
 }

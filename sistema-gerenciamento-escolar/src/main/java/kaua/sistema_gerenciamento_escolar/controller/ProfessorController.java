@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import kaua.sistema_gerenciamento_escolar.dto.FaltasDTO;
 import kaua.sistema_gerenciamento_escolar.dto.NotasDTO;
 import kaua.sistema_gerenciamento_escolar.model.Professor;
 import kaua.sistema_gerenciamento_escolar.repository.ProfessorRepository;
@@ -39,5 +40,10 @@ public class ProfessorController {
     @PutMapping("/{id}/alterarNota")
     public ResponseEntity<?> alterarNota(@PathVariable Integer id, @RequestBody List<Double> notas){
         return ResponseEntity.ok(professorService.alterarNotas(id, notas));
+    }
+
+    @PutMapping("/aplicarFalta")
+    public ResponseEntity<?> aplicarFalta(@RequestBody FaltasDTO faltasDTO){
+        return ResponseEntity.ok(professorService.aplicarFaltas(faltasDTO));
     }
 }

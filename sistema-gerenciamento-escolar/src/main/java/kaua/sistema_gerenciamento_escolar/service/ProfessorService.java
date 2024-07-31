@@ -1,17 +1,23 @@
 package kaua.sistema_gerenciamento_escolar.service;
 
+import java.time.LocalDate;
 import java.util.List;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import kaua.sistema_gerenciamento_escolar.dto.FaltasDTO;
 import kaua.sistema_gerenciamento_escolar.dto.NotasDTO;
+import kaua.sistema_gerenciamento_escolar.dto.dtosResumidos.ResumoFalta;
 import kaua.sistema_gerenciamento_escolar.model.Aluno;
+import kaua.sistema_gerenciamento_escolar.model.Faltas;
 import kaua.sistema_gerenciamento_escolar.model.Materias;
 import kaua.sistema_gerenciamento_escolar.model.Notas;
 import kaua.sistema_gerenciamento_escolar.repository.AlunoRepository;
+import kaua.sistema_gerenciamento_escolar.repository.FaltasRepository;
 import kaua.sistema_gerenciamento_escolar.repository.MateriasRepository;
 import kaua.sistema_gerenciamento_escolar.repository.NotasRepository;
 
@@ -21,12 +27,17 @@ public class ProfessorService {
     @Autowired
     private NotasRepository notasRepository;
 
+    @Autowired
+    private FaltasRepository faltasRepository;
 
     @Autowired
     private AlunoRepository alunoRepository;
 
     @Autowired
     private MateriasRepository materiasRepository;
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Transactional
     public Notas aplicarNotas(NotasDTO notasDTO) {
@@ -106,4 +117,44 @@ public class ProfessorService {
 
         return notasRepository.save(nota);
     }
+
+    @Transactional
+    public ResumoFalta aplicarFaltas(FaltasDTO faltasDTO){
+        Faltas falta = new Faltas();
+
+        if (faltasDTO.quantidade() <= 0){
+            throw new IllegalArgumentException("Falta não pode ser menor ou igual 0");
+        }
+
+        falta.setAluno(alunoRepository.findById(faltasDTO.aluno_id()).orElseThrow(() -> new EntityNotFoundException("Aluno não encontrado")));
+        falta.setMateria(materiasRepository.findById(faltasDTO.materia_id()).orElseThrow(() -> new EntityNotFoundException("Materia nao encontado")));
+        falta.setData(LocalDate.now());
+        falta.setQuantidade(faltasDTO.quantidade());
+ 
+        List<Faltas> faltas = faltasRepository.findByAlunoId(faltasDTO.aluno_id());
+        
+        int totalFaltas = 0;
+        for (Faltas valor: faltas){
+            totalFaltas += valor.getQuantidade();  //total=0 depois total=4//  total =4 depois total = 8//
+        }
+        totalFaltas +=faltasDTO.quantidade();   
+
+
+        falta.setTotalFaltas(totalFaltas);
+
+        if (falta.getTotalFaltas() < 20){
+            falta.setSituacao("Dentro do limite");
+        }else{
+            falta.setSituacao("Reprovado por falta");
+        }
+        
+        faltasRepository.save(falta);
+
+        return toFaltasResumidoDTO(falta);
+    } 
+    
+    private ResumoFalta toFaltasResumidoDTO(Faltas falta) {
+        return modelMapper.map(falta, ResumoFalta.class);
+    }
 }
+
