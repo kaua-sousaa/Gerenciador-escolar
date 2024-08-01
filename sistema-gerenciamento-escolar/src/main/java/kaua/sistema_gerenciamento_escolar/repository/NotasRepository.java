@@ -1,5 +1,7 @@
 package kaua.sistema_gerenciamento_escolar.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -15,4 +17,5 @@ public interface NotasRepository extends JpaRepository<Notas, Integer> {
     @Query("DELETE FROM Notas n WHERE n.alunos.id =:alunoId")
     void deleteByAlunoId(@Param("alunoId") Integer alunoId);
 
+    List<Notas> findByAlunosId(Integer aluno_id);
 }

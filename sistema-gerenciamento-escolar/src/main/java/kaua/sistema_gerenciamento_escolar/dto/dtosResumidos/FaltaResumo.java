@@ -14,7 +14,7 @@ import lombok.Setter;
 public class FaltaResumo {
 
     private LocalDate data;
-    private int faltas;
+    private int quantidade;
     private String situacao;
     private int totalFaltas;
     private ResumoMaterias materia;

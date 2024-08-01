@@ -134,9 +134,10 @@ public class ProfessorService {
         falta.setAluno(alunoRepository.findById(faltasDTO.aluno_id()).orElseThrow(() -> new EntityNotFoundException("Aluno não encontrado")));
         falta.setMateria(materiasRepository.findById(faltasDTO.materia_id()).orElseThrow(() -> new EntityNotFoundException("Materia nao encontado")));
         falta.setData(LocalDate.now());
+        System.out.println("Quantidade faltas"+ faltasDTO.quantidade());
         falta.setQuantidade(faltasDTO.quantidade());
  
-        List<Faltas> faltas = faltasRepository.findByAlunoId(faltasDTO.aluno_id());
+        List<Faltas> faltas = faltasRepository.findByAlunoIdAndMateriaId(faltasDTO.aluno_id(), faltasDTO.materia_id());
         
         int totalFaltas = 0;
         for (Faltas valor: faltas){
