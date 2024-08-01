@@ -11,7 +11,8 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import kaua.sistema_gerenciamento_escolar.dto.FaltasDTO;
 import kaua.sistema_gerenciamento_escolar.dto.NotasDTO;
-import kaua.sistema_gerenciamento_escolar.dto.dtosResumidos.ResumoFalta;
+import kaua.sistema_gerenciamento_escolar.dto.dtosResumidos.FaltaResumo;
+import kaua.sistema_gerenciamento_escolar.dto.dtosResumidos.NotaResumo;
 import kaua.sistema_gerenciamento_escolar.model.Aluno;
 import kaua.sistema_gerenciamento_escolar.model.Faltas;
 import kaua.sistema_gerenciamento_escolar.model.Materias;
@@ -40,7 +41,7 @@ public class ProfessorService {
     private ModelMapper modelMapper;
 
     @Transactional
-    public Notas aplicarNotas(NotasDTO notasDTO) {
+    public NotaResumo aplicarNotas(NotasDTO notasDTO) {
         Notas notas = new Notas();
 
         if (notasDTO.nota1() < 0 || notasDTO.nota1() > 10 ||
@@ -69,11 +70,13 @@ public class ProfessorService {
 
         notas.setMateria(materias);
 
-        return notasRepository.save(notas);
+        notasRepository.save(notas);
+
+        return toResumoNota(notas);
     }
 
     @Transactional
-    public Notas alterarNotas(Integer nota_id, List<Double> notas) {
+    public NotaResumo alterarNotas(Integer nota_id, List<Double> notas) {
         // Anotações: nota 1 sempre haverá nota
         // 1º mudar nota "av1", se nota 1 tiver alteração e nota 2 não vir nada.
         // 2º adicionar nota "av2", se vir duas notas e nota 1 for igual.
@@ -115,11 +118,13 @@ public class ProfessorService {
             throw new IllegalArgumentException("parametros invalidos");
         }
 
-        return notasRepository.save(nota);
+        notasRepository.save(nota);
+
+        return toResumoNota(nota);
     }
 
     @Transactional
-    public ResumoFalta aplicarFaltas(FaltasDTO faltasDTO){
+    public FaltaResumo aplicarFaltas(FaltasDTO faltasDTO){
         Faltas falta = new Faltas();
 
         if (faltasDTO.quantidade() <= 0){
@@ -150,11 +155,15 @@ public class ProfessorService {
         
         faltasRepository.save(falta);
 
-        return toFaltasResumidoDTO(falta);
+        return toResumoFalta(falta);
     } 
     
-    private ResumoFalta toFaltasResumidoDTO(Faltas falta) {
-        return modelMapper.map(falta, ResumoFalta.class);
+    private FaltaResumo toResumoFalta(Faltas falta) {
+        return modelMapper.map(falta, FaltaResumo.class);
+    }
+
+    private NotaResumo toResumoNota(Notas nota) {
+        return modelMapper.map(nota, NotaResumo.class);
     }
 }
 

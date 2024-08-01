@@ -16,7 +16,7 @@ public class AlunoController {
     private AlunoService alunoService;
 
     @GetMapping("/{aluno_id}/alunoInformacoes")
-    public ResponseEntity<Aluno> alunoInfo(@PathVariable Integer aluno_id){
+    public ResponseEntity<?> alunoInfo(@PathVariable Integer aluno_id){
         return ResponseEntity.ok(alunoService.alunoInformacoes(aluno_id));
     }
 }

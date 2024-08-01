@@ -34,10 +34,10 @@ public class Aluno {
     @Column(nullable = false)
     private String nome;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private long matricula;
 
     @Column(nullable = false)

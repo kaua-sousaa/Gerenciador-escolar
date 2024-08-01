@@ -9,8 +9,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class ResumoAluno {
+public class NotaResumo {
     
-    private String nome;
-    private long matricula;
+    private double nota1;
+    private double nota2;
+    private ResumoMaterias materia;
 }
