@@ -44,19 +44,19 @@ public class ProfessorService {
     public NotaResumo aplicarNotas(NotasDTO notasDTO) {
         Notas notas = new Notas();
 
-        if (notasDTO.nota1() < 0 || notasDTO.nota1() > 10 ||
-                notasDTO.nota2() < 0 || notasDTO.nota2() > 10) {
+        if (notasDTO.getNota1() < 0 || notasDTO.getNota1() > 10 ||
+                notasDTO.getNota2() < 0 || notasDTO.getNota2() > 10) {
             throw new IllegalArgumentException("A nota não pode ser menor que 0");
         }
-        notas.setNota1(notasDTO.nota1());
-        notas.setNota2(notasDTO.nota2());
+        notas.setNota1(notasDTO.getNota1());
+        notas.setNota2(notasDTO.getNota2());
 
-        Aluno aluno = alunoRepository.findById(notasDTO.aluno_id())
+        Aluno aluno = alunoRepository.findById(notasDTO.getAluno_id())
                 .orElseThrow(() -> new EntityNotFoundException("Aluno não encontrado"));
 
         notas.setAlunos(aluno);
 
-        Materias materias = materiasRepository.findById(notasDTO.materia_id())
+        Materias materias = materiasRepository.findById(notasDTO.getMateria_id())
                 .orElseThrow(() -> new EntityNotFoundException("Matéria não encontrada"));
 
         for (Notas valor : aluno.getHistoricoNotas()) {
@@ -127,23 +127,23 @@ public class ProfessorService {
     public FaltaResumo aplicarFaltas(FaltasDTO faltasDTO){
         Faltas falta = new Faltas();
 
-        if (faltasDTO.quantidade() <= 0){
+        if (faltasDTO.getQuantidade() <= 0){
             throw new IllegalArgumentException("Falta não pode ser menor ou igual 0");
         }
 
-        falta.setAluno(alunoRepository.findById(faltasDTO.aluno_id()).orElseThrow(() -> new EntityNotFoundException("Aluno não encontrado")));
-        falta.setMateria(materiasRepository.findById(faltasDTO.materia_id()).orElseThrow(() -> new EntityNotFoundException("Materia nao encontado")));
+        falta.setAluno(alunoRepository.findById(faltasDTO.getAluno_id()).orElseThrow(() -> new EntityNotFoundException("Aluno não encontrado")));
+        falta.setMateria(materiasRepository.findById(faltasDTO.getMateria_id()).orElseThrow(() -> new EntityNotFoundException("Materia nao encontado")));
         falta.setData(LocalDate.now());
-        System.out.println("Quantidade faltas"+ faltasDTO.quantidade());
-        falta.setQuantidade(faltasDTO.quantidade());
+        System.out.println("Quantidade faltas"+ faltasDTO.getQuantidade());
+        falta.setQuantidade(faltasDTO.getQuantidade());
  
-        List<Faltas> faltas = faltasRepository.findByAlunoIdAndMateriaId(faltasDTO.aluno_id(), faltasDTO.materia_id());
+        List<Faltas> faltas = faltasRepository.findByAlunoIdAndMateriaId(faltasDTO.getAluno_id(), faltasDTO.getMateria_id());
         
         int totalFaltas = 0;
         for (Faltas valor: faltas){
             totalFaltas += valor.getQuantidade();  //total=0 depois total=4//  total =4 depois total = 8//
         }
-        totalFaltas +=faltasDTO.quantidade();   
+        totalFaltas +=faltasDTO.getQuantidade();   
 
 
         falta.setTotalFaltas(totalFaltas);

@@ -12,11 +12,11 @@ import lombok.Setter;
 @Getter
 @Setter
 public class FaltaResumo {
-
+    private int id;
     private LocalDate data;
     private int quantidade;
     private String situacao;
     private int totalFaltas;
-    private ResumoMaterias materia;
+    private MateriasResumo materia;
     private AlunoResumoParaFalta aluno;
 }

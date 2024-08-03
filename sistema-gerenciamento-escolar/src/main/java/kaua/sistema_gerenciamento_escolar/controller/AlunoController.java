@@ -15,11 +15,13 @@ public class AlunoController {
 
     @GetMapping("/{aluno_id}/alunoInformacoes")
     public ResponseEntity<?> alunoInfo(@PathVariable Integer aluno_id){
+;
         return ResponseEntity.ok(alunoService.alunoInformacoes(aluno_id));
     }
 
     @GetMapping("/{aluno_id}/historicoNotas")
     public ResponseEntity<?> historicoNotasAluno(@PathVariable Integer aluno_id){
+        
         return ResponseEntity.ok(alunoService.notaHistorico(aluno_id));
     }
 

@@ -8,7 +8,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class ResumoMaterias {
+public class MateriasResumo {
+    private int id;
     private String nome;
     private ProfessorResumo professor;
 }

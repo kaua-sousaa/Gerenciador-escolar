@@ -1,8 +1,10 @@
 package kaua.sistema_gerenciamento_escolar.model;
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Column;
@@ -42,6 +44,12 @@ public class Aluno {
 
     @Column(nullable = false)
     private String senha;
+
+    @Column(nullable = false)
+    private String telefone;
+
+    @Column(nullable = false)
+    private LocalDate dataNascimento;
 
     @ManyToMany(mappedBy = "alunos", fetch = FetchType.EAGER)
     @JsonManagedReference

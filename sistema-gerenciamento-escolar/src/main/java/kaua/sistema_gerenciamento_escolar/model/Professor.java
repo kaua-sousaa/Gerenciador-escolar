@@ -1,5 +1,7 @@
 package kaua.sistema_gerenciamento_escolar.model;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -35,4 +37,6 @@ public class Professor {
     @Column(nullable = false)
     private String telefone;
 
+    @Column(nullable = false)
+    private LocalDate dataNascimento;
 }

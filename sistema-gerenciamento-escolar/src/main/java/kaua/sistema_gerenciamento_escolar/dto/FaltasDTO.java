@@ -1,6 +1,19 @@
 package kaua.sistema_gerenciamento_escolar.dto;
 
-public record FaltasDTO(Integer aluno_id, Integer materia_id, Integer quantidade) {
-    
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+public class FaltasDTO {
+    private int id;
+    private Integer aluno_id;
+    private Integer materia_id;
+    private Integer quantidade;
 }
 

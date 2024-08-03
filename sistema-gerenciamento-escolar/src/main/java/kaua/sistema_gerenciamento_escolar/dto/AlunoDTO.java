@@ -1,7 +1,26 @@
 package kaua.sistema_gerenciamento_escolar.dto;
 
+import java.time.LocalDate;
 import java.util.Set;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-public record AlunoDTO(String nome, String email, long matricula, String senha, Set<Integer> matricula_id, Set<Integer> historico_notas_id, Set<Integer> faltas_id) {
-    
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+
+public class AlunoDTO {
+    private int id;
+    private String nome;
+    private String email;
+    private long matricula;
+    private String senha;
+    private String telefone;
+    private LocalDate dataNascimento;
+    private Set<Integer> matricula_id;
+    private Set<Integer> historico_notas_id;
+    private Set<Integer> faltas_id;
 }

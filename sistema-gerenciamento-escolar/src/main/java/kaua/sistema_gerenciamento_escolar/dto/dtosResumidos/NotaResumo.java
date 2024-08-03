@@ -10,8 +10,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class NotaResumo {
-    
+    private int id;
     private double nota1;
     private double nota2;
-    private ResumoMaterias materia;
+    private MateriasResumo materia;
 }

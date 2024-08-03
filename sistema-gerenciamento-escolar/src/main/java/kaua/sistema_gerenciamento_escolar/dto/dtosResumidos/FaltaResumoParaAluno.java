@@ -15,5 +15,5 @@ public class FaltaResumoParaAluno {
     private LocalDate data;
     private String situacao;
     private int totalFaltas;
-    private ResumoMaterias materia;
+    private MateriasResumo materia;
 }

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard do Professor</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .dashboard-card {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand" href="#">Gerenciador Escolar</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">Início</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Turmas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Notas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Faltas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Perfil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Sair</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <div class="container">
+            <h1 class="my-4">Bem-vindo, [Nome do Professor]</h1>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card dashboard-card">
+                        <div class="card-body">
+                            <h5 class="card-title">Informações Pessoais</h5>
+                            <p class="card-text"><strong>Nome:</strong> [Nome do Professor]</p>
+                            <p class="card-text"><strong>Email:</strong> [Email do Professor]</p>
+                            <p class="card-text"><strong>Departamento:</strong> [Departamento]</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card dashboard-card">
+                        <div class="card-body">
+                            <h5 class="card-title">Turmas Atuais</h5>
+                            <ul class="list-group">
+                                <li class="list-group-item">Turma 1</li>
+                                <li class="list-group-item">Turma 2</li>
+                                <li class="list-group-item">Turma 3</li>
+                            </ul>
+                            <a href="#" class="btn btn-primary mt-2">Ver Todas as Turmas</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card dashboard-card">
+                        <div class="card-body">
+                            <h5 class="card-title">Notas Recentes</h5>
+                            <ul class="list-group">
+                                <li class="list-group-item">Aluno 1: [Nota]</li>
+                                <li class="list-group-item">Aluno 2: [Nota]</li>
+                                <li class="list-group-item">Aluno 3: [Nota]</li>
+                            </ul>
+                            <a href="#" class="btn btn-primary mt-2">Ver Todas as Notas</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card dashboard-card">
+                        <div class="card-body">
+                            <h5 class="card-title">Faltas dos Alunos</h5>
+                            <ul class="list-group">
+                                <li class="list-group-item">Aluno 1: [Quantidade de Faltas]</li>
+                                <li class="list-group-item">Aluno 2: [Quantidade de Faltas]</li>
+                                <li class="list-group-item">Aluno 3: [Quantidade de Faltas]</li>
+                            </ul>
+                            <a href="#" class="btn btn-primary mt-2">Ver Todas as Faltas</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
