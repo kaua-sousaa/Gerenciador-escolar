@@ -16,28 +16,7 @@
 </head>
 <body>
     <div class="container-fluid">
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <a class="navbar-brand" href="#">Gerenciador Escolar</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item active">
-                        <a class="nav-link" href="/">Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="gerenciarAluno">Gerenciar Alunos</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="gerenciarProfessor">Gerenciar Professores</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/gerenciarMaterias">Gerenciar Matérias</a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
+        <div th:include="base :: navFragment"></div>
 
         <div class="container">
             <h1 class="my-4">Bem-vindo ao Dashboard do Administrador</h1>
@@ -46,8 +25,8 @@
                     <div class="card dashboard-card">
                         <div class="card-body">
                             <h5 class="card-title">Total de Alunos</h5>
-                            <p class="card-text" id="total-alunos">0</p>
-                            <a href="#" class="btn btn-primary">Ver Alunos</a>
+                            <p class="card-text" id="total-alunos" th:text="${alunQ}"></p>
+                            <a href="/gerenciarAluno" class="btn btn-primary">Ver Alunos</a>
                         </div>
                     </div>
                 </div>
@@ -55,8 +34,8 @@
                     <div class="card dashboard-card">
                         <div class="card-body">
                             <h5 class="card-title">Total de Professores</h5>
-                            <p class="card-text" id="total-professores">0</p>
-                            <a href="#" class="btn btn-primary">Ver Professores</a>
+                            <p class="card-text" id="total-professores" th:text="${profQ}"></p>
+                            <a href="/gerenciarProfessor" class="btn btn-primary">Ver Professores</a>
                         </div>
                     </div>
                 </div>
@@ -64,8 +43,8 @@
                     <div class="card dashboard-card">
                         <div class="card-body">
                             <h5 class="card-title">Total de Matérias</h5>
-                            <p class="card-text" id="total-materias">0</p>
-                            <a href="#" class="btn btn-primary">Ver Matérias</a>
+                            <p class="card-text" id="total-materias" th:text="${mateQ}"></p>
+                            <a href="/gerenciarMaterias" class="btn btn-primary">Ver Matérias</a>
                         </div>
                     </div>
                 </div>
@@ -150,6 +129,7 @@
                                 <div class="form-group">
                                     Insira o professor
                                     <select name="professor_id" id="professorMateria" class="form-control">
+                                        <option value="">--- Insira um professor ---</option>
                                         <option th:each="professor : ${professores}" th:value="${professor.id}" th:text="${professor.nome}"></option>
                                     </select>
                                 </div>

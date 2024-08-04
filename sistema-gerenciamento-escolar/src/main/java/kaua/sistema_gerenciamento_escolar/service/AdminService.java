@@ -2,8 +2,10 @@ package kaua.sistema_gerenciamento_escolar.service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -46,15 +48,31 @@ public class AdminService {
     @Autowired
     private ModelMapper modelMapper;
 
+    public Map<String, Long> contarEntidades(){
+        Map<String, Long> conteudo = new HashMap<>();
+
+        conteudo.put("alunosQ", alunoRepository.count());
+        conteudo.put("professoresQ", professorRepository.count());
+        conteudo.put("materiasQ", materiasRepository.count());
+
+        return conteudo;
+    }
+
     public Set<Integer> getAlunosMatriculados(Integer materia_id){
         Set<Integer> alunosMatriculados = alunoRepository.findAlunoIdsByMateriaId(materia_id);
         return alunosMatriculados;
     }
 
-    public List<AlunoResumo> getAlunos() {
+    public List<AlunoResumo> getAlunos(){
         return alunoRepository.findAll().stream()
         .map(this::toResumoAluno)
         .collect(Collectors.toList());
+    }
+    public AlunoResumo getAluno(Integer aluno_id) {
+        Aluno aluno = alunoRepository.findById(aluno_id)
+        .orElseThrow(() -> new EntityNotFoundException("Aluno nao encontrado"));
+
+        return toResumoAluno(aluno);
     }
 
     public List<MateriasResumo> getMaterias(){
@@ -73,13 +91,7 @@ public class AdminService {
         return professorRepository.findAll().stream()
         .map(this::toResumoProfessor)
         .collect(Collectors.toList());
-    }
-
-    public List<AlunoResumo> getAluno(){
-        return alunoRepository.findAll().stream()
-        .map(this::toResumoAluno)
-        .collect(Collectors.toList());
-    }
+    }   
 
     @Transactional
     public AlunoResumo criarAluno(AlunoDTO alunoDTO) {
@@ -101,16 +113,13 @@ public class AdminService {
                 materia.getAlunos().add(aluno);
             }
         }
-
         alunoRepository.save(aluno);
-
         return toResumoAluno(aluno);
     }
 
     @Transactional
     public MateriasResumo criarMateria(MateriaDTO materiaDTO) {
         Materias materia = new Materias();
-
         // verificar se já existe essa matéria
         Optional<Materias> materiaExiste = materiasRepository.findByNomeAndProfessorId(materiaDTO.getNome(),
                 materiaDTO.getProfessor_id());
@@ -127,9 +136,7 @@ public class AdminService {
                 .orElseThrow(() -> new EntityNotFoundException("Professor não encontrado"));
 
         materia.setProfessor(professor);
-
         materiasRepository.save(materia);
-
         return toResumoMaterias(materia);
     }
 
@@ -144,11 +151,10 @@ public class AdminService {
         professor.setTelefone(professorDTO.getTelefone());
         professor.setDataNascimento(professorDTO.getDataNascimento());
         professorRepository.save(professor);
-
         return toResumoProfessor(professor);
     }
 
-    @Transactional
+    /* @Transactional
     public AlunoResumo adicionarMateriaAluno(Integer aluno_id, Set<Integer> materia_id) {
         Aluno aluno = alunoRepository.findById(aluno_id)
                 .orElseThrow(() -> new EntityNotFoundException("Aluno nao encontradooo"));
@@ -162,7 +168,7 @@ public class AdminService {
         }
         alunoRepository.save(aluno);
         return toResumoAluno(aluno);
-    }
+    } */
 
     @Transactional
     public MateriasResumo adicionarAlunoMateria(Integer materia_id, Set<Integer> alunos_id) {
@@ -176,7 +182,6 @@ public class AdminService {
         for (Aluno aluno : alunos) {
             aluno.getMateriasMatriculadas().add(materia);
         }
-
         materiasRepository.save(materia);
         return toResumoMaterias(materia);
     }
@@ -192,7 +197,6 @@ public class AdminService {
         }
 
         notasRepository.deleteByAlunoId(aluno_id);
-
         alunoRepository.deleteById(aluno_id);
     }
 
@@ -200,23 +204,36 @@ public class AdminService {
     public void excluirProfessor(Integer professor_id){
         Professor professor = professorRepository.findById(professor_id)
         .orElseThrow(() -> new EntityNotFoundException("Professor nao encontrado"));
-
         professorRepository.delete(professor);
     }
+
+    @Transactional
+    public void editarAluno(Integer aluno_id, AlunoResumo alunoResumo){
+        Aluno aluno = alunoRepository.findById(aluno_id)
+        .orElseThrow(() -> new EntityNotFoundException("Aluno não encontrado"));
+
+        aluno.setNome(alunoResumo.getNome());
+        aluno.setEmail(alunoResumo.getEmail());
+        aluno.setMatricula(alunoResumo.getMatricula());
+        aluno.setDataNascimento(alunoResumo.getDataNascimento());
+        aluno.setTelefone(alunoResumo.getTelefone());
+
+        alunoRepository.save(aluno);
+    }
+
 
     private MateriasResumo toResumoMaterias(Materias materias) {
         return modelMapper.map(materias, MateriasResumo.class);
     }
-
     private MateriaDTO toResumoMateriasDTO(Materias materias) {
         //modificao feita pq em MateriaDTO a variavel é "professor_id", mas na entidade Materias é "professor"
         MateriaDTO materiaDTO = modelMapper.map(materias, MateriaDTO.class);
         if (materias != null){
             materiaDTO.setProfessor_id(materias.getProfessor().getId());
         }
-
         return materiaDTO;
     }
+
 
     private AlunoResumo toResumoAluno(Aluno aluno) {
         return modelMapper.map(aluno, AlunoResumo.class);
@@ -225,7 +242,6 @@ public class AdminService {
     private ProfessorResumo toResumoProfessor(Professor professor) {
         return modelMapper.map(professor, ProfessorResumo.class);
     }
-
     private String gerarSenhaBaseadaEmData(LocalDate dataNascimento) {
     return dataNascimento.format(DateTimeFormatter.ofPattern("ddMMyyyy"));
 }

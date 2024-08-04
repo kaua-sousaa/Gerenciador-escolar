@@ -1,6 +1,7 @@
 package kaua.sistema_gerenciamento_escolar.controller;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -31,25 +32,30 @@ import kaua.sistema_gerenciamento_escolar.service.AdminService;
 @Controller
 public class AdministradorController {
     
-
     @Autowired
     private AdminService adminService;
 
     @GetMapping("/gerenciarMateriasAdicionar/{materia_id}")
-    public String adicionarMateria(@PathVariable Integer materia_id, Model model){
-        List<AlunoResumo> alunos = adminService.getAluno();
+    public String adicionarMateriaEmAluno(@PathVariable Integer materia_id, Model model){
+        List<AlunoResumo> alunos = adminService.getAlunos();
         Set<Integer> alunosMatriculados = adminService.getAlunosMatriculados(materia_id);
         model.addAttribute("alunosMatriculados", alunosMatriculados);
         model.addAttribute("alunos", alunos);
         return "adicionarMateriaAluno";
     }
 
+    @GetMapping("/editarAlunoGet/{aluno_id}")
+    public String editarAluno(@PathVariable Integer aluno_id, Model model){
+        AlunoResumo aluno = adminService.getAluno(aluno_id); 
+        model.addAttribute("aluno", aluno);
+        return "editarAluno";
+    }
 
     @GetMapping("/gerenciarMaterias")
-    public String listarMaterias(Model model){
+    public String listaGerenciarMaterias(Model model){
         List<MateriaDTO> materias = adminService.getMateriasDTO();
         List<ProfessorResumo> professor = adminService.getProfessor();
-        List<AlunoResumo> aluno = adminService.getAluno();
+        List<AlunoResumo> aluno = adminService.getAlunos();
         model.addAttribute("professores", professor);
         model.addAttribute("alunos", aluno);
         model.addAttribute("materias", materias);
@@ -58,7 +64,7 @@ public class AdministradorController {
     }
 
     @GetMapping("/gerenciarAluno")
-    public String listarAlunos(Model model){
+    public String listaGerenciarAlunos(Model model){
         List<AlunoResumo> aluno = adminService.getAlunos();
         List<MateriasResumo> materias = adminService.getMaterias();
         model.addAttribute("alunos", aluno);
@@ -75,8 +81,12 @@ public class AdministradorController {
     }
 
     @GetMapping("/")
-    public String listaProfessoresIndex (Model model){
-        List<ProfessorResumo> professor = adminService.getProfessor();
+    public String indexConteudo (Model model){
+        List<ProfessorResumo> professor = adminService.getProfessor();  //Q = quantidade
+        Map<String, Long> conteudo = adminService.contarEntidades();
+        model.addAttribute("alunQ", conteudo.get("alunosQ"));
+        model.addAttribute("profQ", conteudo.get("professoresQ"));
+        model.addAttribute("mateQ", conteudo.get("materiasQ"));
         model.addAttribute("professores", professor);
         model.addAttribute("materiaDTO", new MateriaDTO());  
         return "index";
@@ -128,5 +138,12 @@ public class AdministradorController {
     public String deletarProfessor(@PathVariable Integer professor_id){
         adminService.excluirProfessor(professor_id);
         return "redirect:/gerenciarProfessor";
+    }
+
+    @PostMapping("/editarAluno/{aluno_id}")
+    public String editarAluno(@PathVariable Integer aluno_id, @ModelAttribute AlunoResumo alunoResumo){
+        System.out.println("teste do nome de aluno" + alunoResumo.getNome());
+        adminService.editarAluno(aluno_id, alunoResumo);
+        return "redirect:/gerenciarAluno";
     }
 }

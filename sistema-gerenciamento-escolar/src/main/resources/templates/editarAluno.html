@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciar Alunos</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container-fluid">
+        <div th:include="base :: navFragment"></div>
+
+        <div class="container">
+            <h1 class="my-4">Gerenciar Alunos</h1>
+
+            <div class="mt-5">
+                <h2>Alunos</h2>
+                <form th:action="@{/editarAluno/{aluno_id}(aluno_id=${aluno.id})}" method="post">
+                    <div class="form-row">
+                      <div class="col-md-4 mb-3">
+                        <label for="validationDefault01">Nome</label>
+                        <input type="text" class="form-control" id="validationDefault01" placeholder="Nome" th:value="${aluno.nome}" name="nome" required>
+                      </div>
+                      <div class="col-md-4 mb-3">
+                        <label for="validationDefault02">Matricula</label>
+                        <input type="number" class="form-control" id="validationDefault02" placeholder="Matricula" th:value="${aluno.matricula}" name="matricula" required>
+                      </div>
+                      <div class="col-md-4 mb-3">
+                        <label for="validationEmail">Email</label>
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text" id="inputGroupPrepend2">@</span>
+                          </div>
+                          <input type="email" class="form-control" id="validationEmail" placeholder="Email" aria-describedby="inputGroupPrepend2"
+                          th:value="${aluno.email}" name="email" required>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-row">
+                      <div class="col-md-6 mb-3">
+                        <label for="validationDefault03">Data de nascimento</label>
+                        <input type="date" class="form-control" id="validationDefault03" th:value="${aluno.dataNascimento}" name="dataNascimento"required>
+                      </div>
+                      <div class="col-md-3 mb-3">
+                        <label for="validationDefault04">telefone</label>
+                        <input type="text" class="form-control" 
+                                id="validationDefault04" placeholder="(99) 99999-9999" pattern="(\([0-9]{2}\))\s([9]{1})?([0-9]{5})-([0-9]{4})" th:value="${aluno.telefone}" name="telefone" required>
+                      </div>
+                    </div>
+                    <button class="btn btn-primary" type="submit">Editar</button>
+                  </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
