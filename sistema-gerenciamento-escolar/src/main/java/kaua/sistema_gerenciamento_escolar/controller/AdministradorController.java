@@ -44,6 +44,13 @@ public class AdministradorController {
         return "adicionarMateriaAluno";
     }
 
+    @GetMapping("/editarProfessorGet/{professor_id}")
+    public String editarProfessor(@PathVariable Integer professor_id, Model model){
+        ProfessorResumo professor = adminService.getProfessor(professor_id);
+        model.addAttribute("professor", professor);
+        return "editarProfessor";
+    }
+
     @GetMapping("/editarAlunoGet/{aluno_id}")
     public String editarAluno(@PathVariable Integer aluno_id, Model model){
         AlunoResumo aluno = adminService.getAluno(aluno_id); 
@@ -54,7 +61,7 @@ public class AdministradorController {
     @GetMapping("/gerenciarMaterias")
     public String listaGerenciarMaterias(Model model){
         List<MateriaDTO> materias = adminService.getMateriasDTO();
-        List<ProfessorResumo> professor = adminService.getProfessor();
+        List<ProfessorResumo> professor = adminService.getProfessores();
         List<AlunoResumo> aluno = adminService.getAlunos();
         model.addAttribute("professores", professor);
         model.addAttribute("alunos", aluno);
@@ -75,14 +82,14 @@ public class AdministradorController {
 
     @GetMapping("/gerenciarProfessor")
     public String listaGerenciarProfessores (Model model){
-        List<ProfessorResumo> professor = adminService.getProfessor();
+        List<ProfessorResumo> professor = adminService.getProfessores();
         model.addAttribute("professores", professor);
         return "gerenciarProfessor";
     }
 
     @GetMapping("/")
     public String indexConteudo (Model model){
-        List<ProfessorResumo> professor = adminService.getProfessor();  //Q = quantidade
+        List<ProfessorResumo> professor = adminService.getProfessores();  //Q = quantidade
         Map<String, Long> conteudo = adminService.contarEntidades();
         model.addAttribute("alunQ", conteudo.get("alunosQ"));
         model.addAttribute("profQ", conteudo.get("professoresQ"));
@@ -142,8 +149,13 @@ public class AdministradorController {
 
     @PostMapping("/editarAluno/{aluno_id}")
     public String editarAluno(@PathVariable Integer aluno_id, @ModelAttribute AlunoResumo alunoResumo){
-        System.out.println("teste do nome de aluno" + alunoResumo.getNome());
         adminService.editarAluno(aluno_id, alunoResumo);
         return "redirect:/gerenciarAluno";
+    }
+
+    @PostMapping("/editarProfessor/{professor_id}")
+    public String editarProfessor(@PathVariable Integer professor_id, @ModelAttribute ProfessorResumo professorResumo){
+        adminService.editarProfessor(professor_id, professorResumo);
+        return "redirect:/gerenciarProfessor";
     }
 }

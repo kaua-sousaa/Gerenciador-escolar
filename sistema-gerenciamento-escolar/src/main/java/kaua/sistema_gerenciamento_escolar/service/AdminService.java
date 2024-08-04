@@ -87,10 +87,17 @@ public class AdminService {
         .collect(Collectors.toList());
     }
 
-    public List<ProfessorResumo> getProfessor(){
+    public List<ProfessorResumo> getProfessores(){
         return professorRepository.findAll().stream()
         .map(this::toResumoProfessor)
         .collect(Collectors.toList());
+    }   
+
+    public ProfessorResumo getProfessor(Integer professor_id){
+        Professor professor = professorRepository.findById(professor_id)
+        .orElseThrow(() -> new EntityNotFoundException("Professor nao encontrado"));
+
+        return toResumoProfessor(professor);
     }   
 
     @Transactional
@@ -219,6 +226,19 @@ public class AdminService {
         aluno.setTelefone(alunoResumo.getTelefone());
 
         alunoRepository.save(aluno);
+    }
+
+    @Transactional
+    public void editarProfessor(Integer professor_id, ProfessorResumo professorResumo){
+        Professor professor = professorRepository.findById(professor_id)
+        .orElseThrow(() -> new EntityNotFoundException("Professor não encontrado"));
+
+        professor.setNome(professorResumo.getNome());
+        professor.setEmail(professorResumo.getEmail());
+        professor.setTelefone(professorResumo.getTelefone());
+        professor.setDataNascimento(professorResumo.getDataNascimento());
+        
+        professorRepository.save(professor);
     }
 
 

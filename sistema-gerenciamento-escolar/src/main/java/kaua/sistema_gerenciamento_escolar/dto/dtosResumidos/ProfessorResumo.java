@@ -1,5 +1,7 @@
 package kaua.sistema_gerenciamento_escolar.dto.dtosResumidos;
 
+import java.time.LocalDate;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,4 +16,5 @@ public class ProfessorResumo {
     private String nome;
     private String email;
     private String telefone;
+    private LocalDate dataNascimento;
 }
