@@ -2,6 +2,7 @@ package kaua.sistema_gerenciamento_escolar.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,12 +10,15 @@ import org.springframework.stereotype.Service;
 import jakarta.persistence.EntityNotFoundException;
 import kaua.sistema_gerenciamento_escolar.dto.dtosResumidos.AlunoResumo;
 import kaua.sistema_gerenciamento_escolar.dto.dtosResumidos.FaltaResumo;
+import kaua.sistema_gerenciamento_escolar.dto.dtosResumidos.MateriasResumo;
 import kaua.sistema_gerenciamento_escolar.dto.dtosResumidos.NotaResumo;
 import kaua.sistema_gerenciamento_escolar.model.Aluno;
 import kaua.sistema_gerenciamento_escolar.model.Faltas;
+import kaua.sistema_gerenciamento_escolar.model.Materias;
 import kaua.sistema_gerenciamento_escolar.model.Notas;
 import kaua.sistema_gerenciamento_escolar.repository.AlunoRepository;
 import kaua.sistema_gerenciamento_escolar.repository.FaltasRepository;
+import kaua.sistema_gerenciamento_escolar.repository.MateriasRepository;
 import kaua.sistema_gerenciamento_escolar.repository.NotasRepository;
 
 @Service
@@ -28,6 +32,9 @@ public class AlunoService {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private MateriasRepository materiasRepository;
 
     @Autowired
     private FaltasRepository faltasRepository;
@@ -61,6 +68,15 @@ public class AlunoService {
         return faltasResumo;
     }
 
+    public List<MateriasResumo> materiasAluno(Integer aluno_id){
+        List<Materias> materias = materiasRepository.findMateriaByAlunoId(aluno_id);
+        List<MateriasResumo> materiasResumos = new ArrayList<>();
+        for (Materias materia : materias){
+            materiasResumos.add(toMateriaResumo(materia));
+        }
+        return materiasResumos;
+    }
+
     private FaltaResumo toFaltaResumo(Faltas faltas) {
         return modelMapper.map(faltas, FaltaResumo.class);
     }
@@ -73,5 +89,7 @@ public class AlunoService {
         return modelMapper.map(aluno, AlunoResumo.class);
     }
 
-    
+    private MateriasResumo toMateriaResumo(Materias materia){
+        return modelMapper.map(materia, MateriasResumo.class);
+    }
 }
