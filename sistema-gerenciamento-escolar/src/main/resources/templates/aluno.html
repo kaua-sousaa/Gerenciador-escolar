@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard do Aluno</title>
-     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/style.css}">
 <link rel="stylesheet" th:href="@{/style.css}">
 </head>
 <body>
@@ -45,7 +46,7 @@
                             <ul class="list-group" th:each="nota : ${notas}">
                                 <li class="list-group-item  mt-2" th:utext="'<strong>Materia:</strong> ' + ${nota.materia.nome} + '<br> <strong>Nota1:</strong> ' +${nota.nota1} + ' | <strong>Nota2: </strong>  ' + ${nota.nota2}">Matéria 1: [Nota]</li>
                             </ul>
-                            <a href="#" class="btn btn-primary mt-2">Ver Todas as Notas</a>
+                            <button type="button" class="btn btn-primary mt-2" data-bs-toggle="modal" data-bs-target="#JanelaModalNota">Ver todas as notas</button>
                         </div>
                     </div>
                 </div>
@@ -57,7 +58,7 @@
                             <ul class="list-group" th:each="falta : ${faltas}">
                                 <li class="list-group-item  mt-2" th:utext="'<strong>Materia: </strong>' + ${falta.materia.nome} + '<br><strong>Faltas: </strong>+' + ${falta.quantidade} + ' | <strong>Total: </strong>'+ ${falta.totalFaltas}">Matéria 1: [Quantidade de Faltas]</li>
                             </ul>
-                            <a href="#" class="btn btn-primary mt-2">Ver Todas as Faltas</a>
+                            <button type="button" class="btn btn-primary mt-2" data-bs-toggle="modal" data-bs-target="#JanelaModalFalta">Ver todas as faltas</button>
                         </div>
                     </div>
                 </div>
@@ -71,16 +72,127 @@
                             <ul class="list-group" th:each="materia : ${materias}">
                                 <li class="list-group-item mt-2" th:utext="'<strong>Materia: </strong>' + ${materia.nome}">Matéria 1</li>
                             </ul>
-                            <a href="#" class="btn btn-primary mt-2">Ver Todas as Matérias</a>
+                             <button type="button" class="btn btn-primary mt-2" data-bs-toggle="modal" data-bs-target="#JanelaModalMateria">Ver todas as matérias</button>
                         </div>
                     </div>
                 </div>
             </div>
             </div>
         </div>
+        <div id="JanelaModalMateria" class="modal fade">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+    
+                    <div class="modal-header">
+                        <h3 class="modal-title">Materias</h3>
+                        <button type="button" class="btn btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+    
+                    <div class="modal-body">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Materia</th>
+                                    <th>Professor</th>
+                                    <th>Email do Professor</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="materia : ${materias}">
+                                    <td th:utext="${materia.nome}"></td>
+                                    <td th:utext="${materia.professor.nome}"></td>
+                                    <td th:utext="${materia.professor.email}"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+    
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-danger" data-bs-dismiss="modal">Fechar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="JanelaModalNota" class="modal fade">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+    
+                    <div class="modal-header">
+                        <h3 class="modal-title">Notas</h3>
+                        <button type="button" class="btn btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+    
+                    <div class="modal-body">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Materia</th>
+                                    <th>Nota 1</th>
+                                    <th>Nota 2</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="nota : ${notas}">
+                                    <td th:utext="${nota.materia.nome}"></td>
+                                    <td th:utext="${nota.nota1}"></td>
+                                    <td th:utext="${nota.nota2}"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+    
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-danger" data-bs-dismiss="modal">Fechar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="JanelaModalFalta" class="modal fade">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+    
+                    <div class="modal-header">
+                        <h3 class="modal-title">Faltas  </h3>
+                        <button type="button" class="btn btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+    
+                    <div class="modal-body">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Materia</th>
+                                    <th>Data</th>
+                                    <th>Quantidade</th>
+                                    <th>Total de faltas</th>
+                                    <th>Situacao</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="falta : ${faltas}">
+                                    <td th:utext="${falta.materia.nome}"></td>
+                                    <td th:utext="${falta.data}"></td>
+                                    <td th:utext="${falta.quantidade}"></td>
+                                    <td th:utext="${falta.totalFaltas}"></td>
+                                    <td th:utext="${falta.situacao}"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+    
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-danger" data-bs-dismiss="modal">Fechar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
 </body>
 </html>
