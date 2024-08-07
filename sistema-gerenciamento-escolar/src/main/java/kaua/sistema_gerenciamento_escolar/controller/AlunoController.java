@@ -9,8 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
-
 import org.springframework.ui.Model;
 import kaua.sistema_gerenciamento_escolar.dto.dtosResumidos.AlunoResumo;
 import kaua.sistema_gerenciamento_escolar.dto.dtosResumidos.FaltaResumo;
@@ -44,9 +42,9 @@ public class AlunoController {
     @GetMapping("/aluno")
     public String indexAluno(Model model){
         AlunoResumo alunoResumo = alunoService.alunoInformacoes(23);
-        List<FaltaResumo> faltaResumo = alunoService.faltasHistorico(23).stream().limit(2).collect(Collectors.toList());
-        List<NotaResumo> notaResumo = alunoService.notaHistorico(23).stream().limit(2).collect(Collectors.toList());
-        List<MateriasResumo> materiasResumos = alunoService.materiasAluno(23).stream().limit(3).collect(Collectors.toList());
+        List<FaltaResumo> faltaResumo = alunoService.faltasHistorico(23);
+        List<NotaResumo> notaResumo = alunoService.notaHistorico(23);
+        List<MateriasResumo> materiasResumos = alunoService.materiasAluno(23);
         model.addAttribute("aluno", alunoResumo); //info aluno
         model.addAttribute("faltas", faltaResumo); //info faltas
         model.addAttribute("notas", notaResumo); // info notas

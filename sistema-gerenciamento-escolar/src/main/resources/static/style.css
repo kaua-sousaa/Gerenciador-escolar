@@ -1,4 +1,4 @@
-.container {
+/* .container {
     background: rgba(255, 255, 255, 0.8);
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -13,3 +13,7 @@
 .card .dashboard-card {
     min-height: 250px;
 }
+
+body{
+    background-color: rgb(104, 104, 104);
+} */

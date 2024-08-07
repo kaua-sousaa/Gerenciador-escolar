@@ -24,4 +24,6 @@ public class AlunoResumo {
     private Set<MateriasResumo> materias;
     private Set<NotaResumo> historico;
     private List<FaltaResumoParaAluno> faltas;
+
 }
+

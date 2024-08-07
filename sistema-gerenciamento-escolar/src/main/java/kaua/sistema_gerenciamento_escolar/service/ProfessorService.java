@@ -1,7 +1,13 @@
 package kaua.sistema_gerenciamento_escolar.service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,22 +17,30 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import kaua.sistema_gerenciamento_escolar.dto.FaltasDTO;
 import kaua.sistema_gerenciamento_escolar.dto.NotasDTO;
+import kaua.sistema_gerenciamento_escolar.dto.dtosResumidos.AlunoResumo;
 import kaua.sistema_gerenciamento_escolar.dto.dtosResumidos.FaltaResumo;
+import kaua.sistema_gerenciamento_escolar.dto.dtosResumidos.MateriasResumo;
 import kaua.sistema_gerenciamento_escolar.dto.dtosResumidos.NotaResumo;
+import kaua.sistema_gerenciamento_escolar.dto.dtosResumidos.ProfessorResumo;
 import kaua.sistema_gerenciamento_escolar.model.Aluno;
 import kaua.sistema_gerenciamento_escolar.model.Faltas;
 import kaua.sistema_gerenciamento_escolar.model.Materias;
 import kaua.sistema_gerenciamento_escolar.model.Notas;
+import kaua.sistema_gerenciamento_escolar.model.Professor;
 import kaua.sistema_gerenciamento_escolar.repository.AlunoRepository;
 import kaua.sistema_gerenciamento_escolar.repository.FaltasRepository;
 import kaua.sistema_gerenciamento_escolar.repository.MateriasRepository;
 import kaua.sistema_gerenciamento_escolar.repository.NotasRepository;
+import kaua.sistema_gerenciamento_escolar.repository.ProfessorRepository;
 
 @Service
 public class ProfessorService {
 
     @Autowired
     private NotasRepository notasRepository;
+
+    @Autowired
+    private ProfessorRepository professorRepository;
 
     @Autowired
     private FaltasRepository faltasRepository;
@@ -39,6 +53,58 @@ public class ProfessorService {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    public ProfessorResumo professorInformacoes(Integer professor_id){
+        Professor professor = professorRepository.findById(professor_id)
+        .orElseThrow(() -> new EntityNotFoundException("Professor nao encontrado"));   
+        return toProfessorResumo(professor);
+    }
+
+    public List<MateriasResumo> professorMaterias(Integer professor_id){
+        List <Materias> materias = materiasRepository.findByProfessorId(professor_id);
+        List<MateriasResumo> materiasResumo = new ArrayList<>(); 
+        
+        for (Materias materia : materias){
+            materiasResumo.add(toMateriasResumo(materia));
+        }
+        return materiasResumo;
+    }
+
+    public List<NotaResumo> professorNotas(Integer professor_id){
+        Materias materia = materiasRepository.findByProfessorId(professor_id).get(0);
+        List<Notas> notas = notasRepository.findByMateria(materia);
+        List<NotaResumo> notaResumos = new ArrayList<>();
+        for (Notas nota : notas){
+            notaResumos.add(toResumoNota(nota));
+        }
+        return notaResumos;
+    }
+
+    public Set<FaltaResumo> professorFaltas(Integer professor_id){
+        Materias materia = materiasRepository.findByProfessorId(professor_id).get(0);
+        Set<Faltas> faltas = faltasRepository.findByMateria(materia);
+        Map<Integer, FaltaResumo> faltaResumos = new HashMap<>();
+
+        for (Faltas falta : faltas){
+            int alunoId = falta.getAluno().getId();
+            
+            if(!faltaResumos.containsKey(alunoId)){
+                faltaResumos.put(alunoId, toResumoFalta(falta));
+            }
+        }
+        return new HashSet<>(faltaResumos.values());
+    }
+
+    public List<AlunoResumo> alunosProfessor(Integer professor_id){
+        Materias materia = materiasRepository.findByProfessorId(professor_id).get(0);
+        List<Aluno> alunos = alunoRepository.findAlunosByMateriasMatriculadas(materia);
+        
+        List<AlunoResumo> alunosResumo = new ArrayList<>();
+        for (Aluno aluno : alunos){
+            alunosResumo.add(toAlunoResumo(aluno));
+        }
+        return alunosResumo;
+    }
 
     @Transactional
     public NotaResumo aplicarNotas(NotasDTO notasDTO) {
@@ -69,9 +135,7 @@ public class ProfessorService {
         }
 
         notas.setMateria(materias);
-
         notasRepository.save(notas);
-
         return toResumoNota(notas);
     }
 
@@ -124,6 +188,37 @@ public class ProfessorService {
     }
 
     @Transactional
+    public void aplicarFaltas(Integer materia_id, List<Integer> alunosId, List<Integer> quantidades){
+        for (int i=0; i< alunosId.size(); i++){
+            Integer alunoId = alunosId.get(i);
+            Integer quantidade = quantidades.get(i);
+
+            Faltas falta = new Faltas();
+            falta.setAluno(alunoRepository.findById(alunoId).orElseThrow(() -> new EntityNotFoundException("Aluno não encontrado")));
+            falta.setMateria(materiasRepository.findById(materia_id).orElseThrow(() -> new EntityNotFoundException("Materia nao encontado")));
+            falta.setQuantidade(quantidade);
+            falta.setData(LocalDate.now());
+
+            List<Faltas> faltasTotal = faltasRepository.findByAlunoIdAndMateriaId(alunoId, materia_id);
+
+            int totalFaltas = 0;
+            for (Faltas valorTotal: faltasTotal){
+                totalFaltas += valorTotal.getQuantidade();  //total=0 depois total=4//  total =4 depois total = 8//
+            }
+            totalFaltas +=quantidade; 
+            falta.setTotalFaltas(totalFaltas);
+
+            if (falta.getTotalFaltas() < 20){
+                falta.setSituacao("Dentro do limite");
+            }else{
+                falta.setSituacao("Reprovado por falta");
+            } 
+
+            faltasRepository.save(falta);
+        }      
+        
+    } 
+    /* @Transactional
     public FaltaResumo aplicarFaltas(FaltasDTO faltasDTO){
         Faltas falta = new Faltas();
 
@@ -157,14 +252,26 @@ public class ProfessorService {
         faltasRepository.save(falta);
 
         return toResumoFalta(falta);
-    } 
+    }  */
     
+    private MateriasResumo toMateriasResumo(Materias materia){
+        return modelMapper.map(materia, MateriasResumo.class);
+    }
+
     private FaltaResumo toResumoFalta(Faltas falta) {
         return modelMapper.map(falta, FaltaResumo.class);
     }
 
     private NotaResumo toResumoNota(Notas nota) {
         return modelMapper.map(nota, NotaResumo.class);
+    }
+
+    private ProfessorResumo toProfessorResumo(Professor professor){
+        return modelMapper.map(professor, ProfessorResumo.class);
+    }
+
+    private AlunoResumo toAlunoResumo(Aluno aluno){
+        return modelMapper.map(aluno, AlunoResumo.class);
     }
 }
 

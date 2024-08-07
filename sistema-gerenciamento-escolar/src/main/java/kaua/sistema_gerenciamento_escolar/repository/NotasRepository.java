@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import jakarta.transaction.Transactional;
+import kaua.sistema_gerenciamento_escolar.model.Materias;
 import kaua.sistema_gerenciamento_escolar.model.Notas;
 
 public interface NotasRepository extends JpaRepository<Notas, Integer> {
@@ -18,4 +19,5 @@ public interface NotasRepository extends JpaRepository<Notas, Integer> {
     void deleteByAlunoId(@Param("alunoId") Integer alunoId);
 
     List<Notas> findByAlunosId(Integer aluno_id);
+    List<Notas> findByMateria(Materias materia);
 }

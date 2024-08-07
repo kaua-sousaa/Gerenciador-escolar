@@ -43,7 +43,7 @@
                     <div class="card dashboard-card">
                         <div class="card-body">
                             <h5 class="card-title">Notas Recentes</h5>
-                            <ul class="list-group" th:each="nota : ${notas}">
+                            <ul class="list-group" th:each="nota, iterStat : ${notas.size() > 2 ? notas.subList(0, 2) : notas}">
                                 <li class="list-group-item  mt-2" th:utext="'<strong>Materia:</strong> ' + ${nota.materia.nome} + '<br> <strong>Nota1:</strong> ' +${nota.nota1} + ' | <strong>Nota2: </strong>  ' + ${nota.nota2}">Matéria 1: [Nota]</li>
                             </ul>
                             <button type="button" class="btn btn-primary mt-2" data-bs-toggle="modal" data-bs-target="#JanelaModalNota">Ver todas as notas</button>
@@ -55,7 +55,7 @@
                     <div class="card dashboard-card">
                         <div class="card-body">
                             <h5 class="card-title">Faltas Recentes</h5>
-                            <ul class="list-group" th:each="falta : ${faltas}">
+                            <ul class="list-group" th:each="falta, iterStat : ${faltas.size() > 2 ? faltas.subList(0, 2) : faltas}">
                                 <li class="list-group-item  mt-2" th:utext="'<strong>Materia: </strong>' + ${falta.materia.nome} + '<br><strong>Faltas: </strong>+' + ${falta.quantidade} + ' | <strong>Total: </strong>'+ ${falta.totalFaltas}">Matéria 1: [Quantidade de Faltas]</li>
                             </ul>
                             <button type="button" class="btn btn-primary mt-2" data-bs-toggle="modal" data-bs-target="#JanelaModalFalta">Ver todas as faltas</button>
@@ -69,7 +69,7 @@
                     <div class="card dashboard-card">
                         <div class="card-body">
                             <h5 class="card-title">Matérias Matriculadas</h5>
-                            <ul class="list-group" th:each="materia : ${materias}">
+                            <ul class="list-group" th:each="materia, iterStat : ${materias.size() > 3 ? materias.subList(0, 3) : materias}"> <!-- Se a materia for menor que 3, então exibir todas as mterias-->
                                 <li class="list-group-item mt-2" th:utext="'<strong>Materia: </strong>' + ${materia.nome}">Matéria 1</li>
                             </ul>
                              <button type="button" class="btn btn-primary mt-2" data-bs-toggle="modal" data-bs-target="#JanelaModalMateria">Ver todas as matérias</button>
