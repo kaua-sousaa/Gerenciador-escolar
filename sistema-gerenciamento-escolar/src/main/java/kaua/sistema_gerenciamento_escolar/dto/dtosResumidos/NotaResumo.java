@@ -14,4 +14,5 @@ public class NotaResumo {
     private Double nota1;
     private Double nota2;
     private MateriasResumo materia;
+    private AlunoResumo alunos;
 }

@@ -19,5 +19,5 @@ public interface NotasRepository extends JpaRepository<Notas, Integer> {
     void deleteByAlunoId(@Param("alunoId") Integer alunoId);
 
     List<Notas> findByAlunosId(Integer aluno_id);
-    List<Notas> findByMateria(Materias materia);
+    List<Notas> findByMateriaIn(List<Materias> materia);
 }

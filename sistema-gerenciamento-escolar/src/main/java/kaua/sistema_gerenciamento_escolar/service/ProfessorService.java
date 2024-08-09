@@ -67,8 +67,8 @@ public class ProfessorService {
     }
 
     public List<NotaResumo> professorNotas(Integer professor_id){
-        Materias materia = materiasRepository.findByProfessorId(professor_id).get(0);
-        List<Notas> notas = notasRepository.findByMateria(materia);
+        List<Materias> materia = materiasRepository.findByProfessorId(professor_id);
+        List<Notas> notas = notasRepository.findByMateriaIn(materia);
         List<NotaResumo> notaResumos = new ArrayList<>();
         for (Notas nota : notas){
             notaResumos.add(toResumoNota(nota));
@@ -77,17 +77,20 @@ public class ProfessorService {
     }
 
     public Set<FaltaResumo> professorFaltas(Integer professor_id){
-        Materias materia = materiasRepository.findByProfessorId(professor_id).get(0);
-        Set<Faltas> faltas = faltasRepository.findByMateria(materia);
-        Map<Integer, FaltaResumo> faltaResumos = new HashMap<>();
+        //Diferente, pois envia um resumo para cada aluno e não todos os resumos do banco
+        List<Materias> materia = materiasRepository.findByProfessorId(professor_id);
 
+        Set<Faltas> faltas = faltasRepository.findByMateriaIn(materia);
+        Map<String, FaltaResumo> faltaResumos = new HashMap<>();
+        
         for (Faltas falta : faltas){
             int alunoId = falta.getAluno().getId();
-            
-            if(!faltaResumos.containsKey(alunoId)){
-                faltaResumos.put(alunoId, toResumoFalta(falta));
-            }
+            int materiaId = falta.getMateria().getId();
+
+            String chave = alunoId + "_" + materiaId;
+            faltaResumos.put(chave, toResumoFalta(falta));
         }
+
         return new HashSet<>(faltaResumos.values());
     }
 
