@@ -1,7 +1,9 @@
 package kaua.sistema_gerenciamento_escolar.controller;
 
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,32 +50,47 @@ public class ProfessorController {
         return "professor";
     }
 
-    @GetMapping("/professorFaltas/{materia_id}")
+    @GetMapping("/professorFaltasGet/{materia_id}")
     public String aplicarFaltaGet(@PathVariable Integer materia_id, Model model){
         List<AlunoResumo> alunosResumo = professorService.alunosProfessor(5);
-       // Set<FaltaResumo> faltaResumo = professorService.professorFaltas(5);
-       // model.addAttribute("faltas", faltaResumo);
         model.addAttribute("alunos", alunosResumo);
         return "professorFaltas";
     }
 
-    @GetMapping("/professorMateriaFaltaGet")
+    @GetMapping("/professorNotasGet/{materia_id}")
+    public String aplicarNotasGet(@PathVariable Integer materia_id, Model model){
+        List<AlunoResumo> alunosResumo = professorService.alunosProfessor(5);
+        Map<Integer, NotaResumo> notasMap = new HashMap<>();
+        for (AlunoResumo aluno : alunosResumo){
+            for(NotaResumo nota: aluno.getHistorico()){
+                if (nota.getMateria().getId() == materia_id){
+                    notasMap.put(aluno.getId(), nota);
+                }
+            }
+        }
+        model.addAttribute("notasMap", notasMap);
+        model.addAttribute("alunos", alunosResumo);
+        return "professorNotas";
+    }
+
+    @GetMapping("/professorMateriaGet")
     public String escolherMateriaFalta(Model model){
         List<MateriasResumo> materiasResumo = professorService.professorMaterias(5);
         model.addAttribute("materias", materiasResumo);
 
-        return "professorMateriaFalta";
+        return "professorMateria";
     }
 
-    @PutMapping("/salvarNotas")
-    public ResponseEntity<?> salvarNotas(@RequestBody NotasDTO notasDTO){
-       return ResponseEntity.ok(professorService.aplicarNotas(notasDTO));
+    @PostMapping("/salvarNotas/{materia_id}")
+    public String salvarNotas(@PathVariable Integer materia_id,@RequestParam("alunoId[]") List<Integer> alunosId, @RequestParam("nota1[]") List<Double> nota1, @RequestParam("nota2[]") List<Double> nota2){
+        professorService.aplicarNotas(materia_id, alunosId, nota1, nota2);
+        return "redirect:/professor";
     }
     
-    @PutMapping("/{id}/alterarNota")
+    /* @PutMapping("/{id}/alterarNota")
     public ResponseEntity<?> alterarNota(@PathVariable Integer id, @RequestBody List<Double> notas){
         return ResponseEntity.ok(professorService.alterarNotas(id, notas));
-    }
+    } */
 
     @PostMapping("/aplicarFalta/{materia_id}")
     public String aplicarFalta(@PathVariable int materia_id, @RequestParam("alunoId[]") List<Integer> alunosId, @RequestParam("quantidade[]") List<Integer> quantidades){

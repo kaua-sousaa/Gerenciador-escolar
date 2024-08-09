@@ -1,4 +1,4 @@
-/* .container {
+.container {
     background: rgba(255, 255, 255, 0.8);
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -14,6 +14,17 @@
     min-height: 250px;
 }
 
-body{
-    background-color: rgb(104, 104, 104);
-} */
+.materia-card {
+    width: 300px;
+    height: 250px; 
+    margin: 10px;
+    padding: 20px;
+    background: #f8f9fa; 
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.materia-card .btn {
+    width: 100%; /* Os botões ocupam toda a largura da caixa */
+    margin-bottom: 10px;
+}

@@ -2,6 +2,7 @@ package kaua.sistema_gerenciamento_escolar.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,9 +27,9 @@ public class Notas {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private double nota1;
+    private Double nota1;
 
-    private double nota2;
+    private Double nota2;
 
     @ManyToOne
     @JoinColumn(name="materia_id", nullable = false)

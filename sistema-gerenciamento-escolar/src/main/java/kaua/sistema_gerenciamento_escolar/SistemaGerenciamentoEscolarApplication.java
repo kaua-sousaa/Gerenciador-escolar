@@ -1,4 +1,4 @@
-package kaua.sistema_gerenciamento_escolar;
+	package kaua.sistema_gerenciamento_escolar;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
