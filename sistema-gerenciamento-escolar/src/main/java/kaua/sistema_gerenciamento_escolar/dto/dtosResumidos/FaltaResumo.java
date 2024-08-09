@@ -14,7 +14,7 @@ import lombok.ToString;
 @Setter
 @ToString
 public class FaltaResumo {
-    private int id;
+    private Integer id;
     private LocalDate data;
     private int quantidade;
     private String situacao;

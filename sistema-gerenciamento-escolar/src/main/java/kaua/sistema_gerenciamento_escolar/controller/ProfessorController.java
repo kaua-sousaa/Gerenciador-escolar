@@ -52,6 +52,22 @@ public class ProfessorController {
         return "professor";
     }
 
+    @GetMapping("/professorTurmaGet/{materia_id}")
+    public String professorTurmasGet(@PathVariable Integer materia_id, Model model){
+        List<AlunoResumo> alunoResumo = professorService.alunosProfessor(5);
+        List<MateriasResumo> materiasResumo = professorService.professorMaterias(5);
+        MateriasResumo materiaSelecionada = null;
+        for (MateriasResumo materia : materiasResumo){
+            if(materia.getId().equals(materia_id)){
+                materiaSelecionada = materia;
+                break;
+            }
+        }  
+        model.addAttribute("materia", materiaSelecionada);
+        model.addAttribute("alunos", alunoResumo);
+        return "professorTurma";
+    }
+
     @GetMapping("/professorFaltasGet/{materia_id}")
     public String aplicarFaltaGet(@PathVariable Integer materia_id, Model model){
         List<AlunoResumo> alunosResumo = professorService.alunosProfessor(5);

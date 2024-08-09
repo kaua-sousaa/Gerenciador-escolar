@@ -15,7 +15,7 @@ import lombok.Setter;
 @Setter
 public class AlunoResumo {
     
-    private int id;
+    private Integer id;
     private String nome;
     private String email;
     private long matricula;
