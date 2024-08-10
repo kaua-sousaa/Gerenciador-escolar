@@ -26,6 +26,7 @@ import kaua.sistema_gerenciamento_escolar.model.Aluno;
 import kaua.sistema_gerenciamento_escolar.model.Materias;
 import kaua.sistema_gerenciamento_escolar.model.Professor;
 import kaua.sistema_gerenciamento_escolar.repository.AlunoRepository;
+import kaua.sistema_gerenciamento_escolar.repository.FaltasRepository;
 import kaua.sistema_gerenciamento_escolar.repository.MateriasRepository;
 import kaua.sistema_gerenciamento_escolar.repository.NotasRepository;
 import kaua.sistema_gerenciamento_escolar.repository.ProfessorRepository;
@@ -36,6 +37,9 @@ public class AdminService {
     @Autowired
     private MateriasRepository materiasRepository;
 
+    @Autowired
+    private FaltasRepository faltasRepository;
+     
     @Autowired
     private NotasRepository notasRepository;
 
@@ -81,12 +85,6 @@ public class AdminService {
         .collect(Collectors.toList());
     }
 
-    public List<MateriaDTO> getMateriasDTO(){
-        return materiasRepository.findAll().stream()
-        .map(this::toResumoMateriasDTO)
-        .collect(Collectors.toList());
-    }
-
     public List<ProfessorResumo> getProfessores(){
         return professorRepository.findAll().stream()
         .map(this::toResumoProfessor)
@@ -101,50 +99,52 @@ public class AdminService {
     }   
 
     @Transactional
-    public AlunoResumo criarAluno(AlunoDTO alunoDTO) {
+    public void criarAluno(AlunoResumo alunoResumo) {
         Aluno aluno = new Aluno();
 
-        aluno.setNome(alunoDTO.getNome());
-        aluno.setEmail(alunoDTO.getEmail());
-        aluno.setMatricula(alunoDTO.getMatricula());
-        String senha = gerarSenhaBaseadaEmData(alunoDTO.getDataNascimento());
+        aluno.setNome(alunoResumo.getNome());
+        aluno.setEmail(alunoResumo.getEmail());
+        aluno.setMatricula(alunoResumo.getMatricula());
+        String senha = gerarSenhaBaseadaEmData(alunoResumo.getDataNascimento());
         aluno.setSenha(senha);
-        aluno.setTelefone(alunoDTO.getTelefone());
-        aluno.setDataNascimento(alunoDTO.getDataNascimento());
+        aluno.setTelefone(alunoResumo.getTelefone());
+        aluno.setDataNascimento(alunoResumo.getDataNascimento());
 
-        if (alunoDTO.getMatricula_id() != null) {
-            Set<Materias> materias = new HashSet<>(materiasRepository.findAllById(alunoDTO.getMatricula_id()));
+        /* if (alunoDTO.getMateria_id() != null) {
+            Set<Materias> materias = new HashSet<>(materiasRepository.findAllById(alunoDTO.getMateria_id()));
             aluno.setMateriasMatriculadas(materias);
 
             for (Materias materia : materias) {
                 materia.getAlunos().add(aluno);
             }
-        }
+        } */
         alunoRepository.save(aluno);
-        return toResumoAluno(aluno);
     }
 
     @Transactional
-    public MateriasResumo criarMateria(MateriaDTO materiaDTO) {
+    public void criarMateria(MateriasResumo materiaResumo, Integer professor_id) {
         Materias materia = new Materias();
         // verificar se já existe essa matéria
-        Optional<Materias> materiaExiste = materiasRepository.findByNomeAndProfessorId(materiaDTO.getNome(),
-                materiaDTO.getProfessor_id());
+
+        Optional<Materias> materiaExiste = materiasRepository.findByNome(materiaResumo.getNome());
 
         if (materiaExiste.isPresent()) {
             throw new IllegalArgumentException("Já existe uma matéria com esse nome e professor!");
         }
 
-        materia.setNome(materiaDTO.getNome());
-        materia.setDescricao(materiaDTO.getDescricao());
-        materia.setCargaHoraria(materiaDTO.getCargaHoraria());
+        materia.setNome(materiaResumo.getNome());
+        materia.setDescricao(materiaResumo.getDescricao());
+        materia.setCargaHoraria(materiaResumo.getCargaHoraria());
 
-        Professor professor = professorRepository.findById(materiaDTO.getProfessor_id())
-                .orElseThrow(() -> new EntityNotFoundException("Professor não encontrado"));
+        if (professor_id!=null){
+            Professor professor = professorRepository.findById(professor_id)
+            .orElseThrow(() -> new EntityNotFoundException("Professor nao encontrado"));
+            System.out.println("passou por aqui");
+            materia.setProfessor(professor);
+        }
 
-        materia.setProfessor(professor);
         materiasRepository.save(materia);
-        return toResumoMaterias(materia);
+       // return toResumoMaterias(materia);
     }
 
     @Transactional
@@ -160,22 +160,6 @@ public class AdminService {
         professorRepository.save(professor);
         return toResumoProfessor(professor);
     }
-
-    /* @Transactional
-    public AlunoResumo adicionarMateriaAluno(Integer aluno_id, Set<Integer> materia_id) {
-        Aluno aluno = alunoRepository.findById(aluno_id)
-                .orElseThrow(() -> new EntityNotFoundException("Aluno nao encontradooo"));
-        Set<Materias> materias = new HashSet<>(materiasRepository.findAllById(materia_id));
-        if (materias.size() != materia_id.size()) {
-            throw new EntityNotFoundException("Materias não encontradas");
-        }
-        aluno.setMateriasMatriculadas(materias);
-        for (Materias materia : materias) {
-            materia.getAlunos().add(aluno);
-        }
-        alunoRepository.save(aluno);
-        return toResumoAluno(aluno);
-    } */
 
     @Transactional
     public MateriasResumo adicionarAlunoMateria(Integer materia_id, Set<Integer> alunos_id) {
@@ -202,7 +186,7 @@ public class AdminService {
             materia.getAlunos().remove(aluno);
             materiasRepository.save(materia);
         }
-
+        faltasRepository.deleteByAlunoId(aluno_id);
         notasRepository.deleteByAlunoId(aluno_id);
         alunoRepository.deleteById(aluno_id);
     }
@@ -211,6 +195,12 @@ public class AdminService {
     public void excluirProfessor(Integer professor_id){
         Professor professor = professorRepository.findById(professor_id)
         .orElseThrow(() -> new EntityNotFoundException("Professor nao encontrado"));
+        List<Materias> materias = materiasRepository.findByProfessorId(professor_id);
+        
+        for (Materias materia: materias){
+            materia.setProfessor(null);
+        }
+
         professorRepository.delete(professor);
     }
 
@@ -228,32 +218,37 @@ public class AdminService {
         alunoRepository.save(aluno);
     }
 
+     @Transactional
+    public void editarMateria(Integer materia_id, MateriasResumo materiasResumo){
+        Materias materia = materiasRepository.findById(materia_id)
+        .orElseThrow(() -> new EntityNotFoundException("Materia não encontrada"));
+        Professor professor = professorRepository.findById(materiasResumo.getProfessor().getId()).orElseThrow(()-> new EntityNotFoundException("Professor nao encontrado"));
+        materia.setNome(materiasResumo.getNome());
+        materia.setDescricao(materiasResumo.getDescricao());
+        materia.setCargaHoraria(materiasResumo.getCargaHoraria());
+        materia.setProfessor(professor);
+        materiasRepository.save(materia);
+    }
+ 
     @Transactional
-    public void editarProfessor(Integer professor_id, ProfessorResumo professorResumo){
+    public void editarProfessor(Integer professor_id, ProfessorResumo professorResumo, Integer materia_id){
         Professor professor = professorRepository.findById(professor_id)
         .orElseThrow(() -> new EntityNotFoundException("Professor não encontrado"));
-
+        Materias materia = materiasRepository.findById(materia_id)
+        .orElseThrow(() -> new EntityNotFoundException("Materia nao encontrada"));
+        materia.setProfessor(professor);
         professor.setNome(professorResumo.getNome());
         professor.setEmail(professorResumo.getEmail());
         professor.setTelefone(professorResumo.getTelefone());
         professor.setDataNascimento(professorResumo.getDataNascimento());
-        
         professorRepository.save(professor);
+        materiasRepository.save(materia);
     }
 
 
     private MateriasResumo toResumoMaterias(Materias materias) {
         return modelMapper.map(materias, MateriasResumo.class);
     }
-    private MateriaDTO toResumoMateriasDTO(Materias materias) {
-        //modificao feita pq em MateriaDTO a variavel é "professor_id", mas na entidade Materias é "professor"
-        MateriaDTO materiaDTO = modelMapper.map(materias, MateriaDTO.class);
-        if (materias != null){
-            materiaDTO.setProfessor_id(materias.getProfessor().getId());
-        }
-        return materiaDTO;
-    }
-
 
     private AlunoResumo toResumoAluno(Aluno aluno) {
         return modelMapper.map(aluno, AlunoResumo.class);

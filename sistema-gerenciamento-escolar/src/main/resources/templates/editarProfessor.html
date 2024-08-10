@@ -51,6 +51,13 @@
                                     pattern="(\([0-9]{2}\))\s([9]{1})?([0-9]{5})-([0-9]{4})"
                                     th:value="${professor.telefone}" name="telefone" required>
                             </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="validationDefault05">Materia</label>
+                                <select name="materia_id" class="form-control">
+                                    <option value="">--- Selecione uma matéria ---</option>
+                                    <option  th:each="materia : ${materias}" th:if="${materia.professor == null}" th:value="${materia.id}" th:text="${materia.nome}"></option>
+                                </select>
+                            </div>
                         </div>
                         <button class="btn btn-primary" type="submit">Editar</button>
                     </form>

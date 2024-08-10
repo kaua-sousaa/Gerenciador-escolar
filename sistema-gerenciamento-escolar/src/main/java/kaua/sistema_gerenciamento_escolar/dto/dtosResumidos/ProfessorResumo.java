@@ -17,4 +17,5 @@ public class ProfessorResumo {
     private String email;
     private String telefone;
     private LocalDate dataNascimento;
+    private MateriasResumo materiaResumo;
 }

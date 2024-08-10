@@ -13,8 +13,6 @@
     <div class="container-fluid">
         <div th:insert="~{base :: navFragment}"></div>
 
-
-
         <div class="container">
             <div class="box-blur"></div>
             <h1 class="my-4">Gerenciar Materias</h1>
@@ -37,17 +35,22 @@
                             <td th:text="${materia.cargaHoraria}"></td>
                             <td>
                                 <span th:each="professor : ${professores}"
-                                    th:if="${professor.id} == ${materia.professor_id}" th:text="${professor.nome}">
+                                th:if="${materia.professor != null && materia.professor.id == professor.id}"
+                                th:text="${professor.nome}">
                                 </span>
+                                <span th:if="${materia.professor == null}" th:text="'Nao ha professor'"></span>
                             </td>
                             <td>
                                 <span th:each="professor : ${professores}"
-                                    th:if="${professor.id} == ${materia.professor_id}">
+                                    th:if="${materia.professor !=null  && professor.id == materia.professor.id}">
                                     <a th:href="@{/gerenciarMateriasAdicionar/{materia_id}(materia_id=${materia.id})}"
                                         class="btn btn-primary">
-                                        Inserir matéria
+                                        Inserir alunos
                                     </a>
                                 </span>
+                                <span th:if="${materia.professor == null}">
+                                    <a href="" class="btn btn-secondary disabled" tabindex="-1" aria-disabled="true">Inserir alunos</a>
+                                </span>    
                             </td>
                         </tr>
                     </tbody>

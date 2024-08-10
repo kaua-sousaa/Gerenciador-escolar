@@ -20,7 +20,7 @@ public class AlunoDTO {
     private String senha;
     private String telefone;
     private LocalDate dataNascimento;
-    private Set<Integer> matricula_id;
+    private Set<Integer> materia_id;
     private Set<Integer> historico_notas_id;
     private Set<Integer> faltas_id;
 }

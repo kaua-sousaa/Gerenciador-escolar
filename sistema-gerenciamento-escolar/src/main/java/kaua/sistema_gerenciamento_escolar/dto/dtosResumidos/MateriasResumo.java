@@ -11,5 +11,7 @@ import lombok.Setter;
 public class MateriasResumo {
     private Integer id;
     private String nome;
+    private String descricao;
+    private double cargaHoraria;
     private ProfessorResumo professor;
 }

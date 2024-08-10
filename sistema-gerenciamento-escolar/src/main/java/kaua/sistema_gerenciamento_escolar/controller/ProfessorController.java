@@ -22,7 +22,6 @@ import kaua.sistema_gerenciamento_escolar.dto.dtosResumidos.FaltaResumo;
 import kaua.sistema_gerenciamento_escolar.dto.dtosResumidos.MateriasResumo;
 import kaua.sistema_gerenciamento_escolar.dto.dtosResumidos.NotaResumo;
 import kaua.sistema_gerenciamento_escolar.dto.dtosResumidos.ProfessorResumo;
-import kaua.sistema_gerenciamento_escolar.model.Materias;
 import kaua.sistema_gerenciamento_escolar.service.ProfessorService;
 
 @Controller
@@ -47,7 +46,9 @@ public class ProfessorController {
         model.addAttribute("materias", materiasResumo);
         model.addAttribute("notas", notaResumo);
         //ordenando a exibição pelo nome da matéria
-        Collections.sort(faltaResumoList,Comparator.comparing(falta -> falta.getMateria().getNome()));
+
+        Collections.sort(faltaResumoList,Comparator.comparing(falta -> falta.getMateria().getNome())); 
+        
         model.addAttribute("faltas", faltaResumoList);
         return "professor";
     }

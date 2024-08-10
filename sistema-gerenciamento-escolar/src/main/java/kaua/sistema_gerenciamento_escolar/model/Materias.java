@@ -51,7 +51,7 @@ public class Materias {
     private Set<Aluno> alunos = new HashSet<>();
 
     @ManyToOne
-    @JoinColumn(name = "professor_id", nullable = false)
+    @JoinColumn(name = "professor_id", nullable = true)
     private Professor professor;
 
 

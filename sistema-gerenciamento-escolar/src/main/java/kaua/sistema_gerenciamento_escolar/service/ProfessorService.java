@@ -90,7 +90,7 @@ public class ProfessorService {
             String chave = alunoId + "_" + materiaId;
             faltaResumos.put(chave, toResumoFalta(falta));
         }
-
+        
         return new HashSet<>(faltaResumos.values());
     }
 

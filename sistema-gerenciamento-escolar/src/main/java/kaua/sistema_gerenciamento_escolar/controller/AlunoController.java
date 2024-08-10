@@ -2,8 +2,6 @@ package kaua.sistema_gerenciamento_escolar.controller;
 
 
 import java.util.List;
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -41,10 +39,10 @@ public class AlunoController {
 
     @GetMapping("/aluno")
     public String indexAluno(Model model){
-        AlunoResumo alunoResumo = alunoService.alunoInformacoes(23);
-        List<FaltaResumo> faltaResumo = alunoService.faltasHistorico(23);
-        List<NotaResumo> notaResumo = alunoService.notaHistorico(23);
-        List<MateriasResumo> materiasResumos = alunoService.materiasAluno(23);
+        AlunoResumo alunoResumo = alunoService.alunoInformacoes(29);
+        List<FaltaResumo> faltaResumo = alunoService.faltasHistorico(29);
+        List<NotaResumo> notaResumo = alunoService.notaHistorico(29);
+        List<MateriasResumo> materiasResumos = alunoService.materiasAluno(29);
         model.addAttribute("aluno", alunoResumo); //info aluno
         model.addAttribute("faltas", faltaResumo); //info faltas
         model.addAttribute("notas", notaResumo); // info notas

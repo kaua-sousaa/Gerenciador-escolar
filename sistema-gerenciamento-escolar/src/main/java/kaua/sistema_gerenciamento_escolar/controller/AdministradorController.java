@@ -40,7 +40,9 @@ public class AdministradorController {
     @GetMapping("/editarProfessorGet/{professor_id}")
     public String editarProfessor(@PathVariable Integer professor_id, Model model){
         ProfessorResumo professor = adminService.getProfessor(professor_id);
+        List<MateriasResumo> materias = adminService.getMaterias();
         model.addAttribute("professor", professor);
+        model.addAttribute("materias", materias);
         return "editarProfessor";
     }
 
@@ -53,13 +55,12 @@ public class AdministradorController {
 
     @GetMapping("/gerenciarMaterias")
     public String listaGerenciarMaterias(Model model){
-        List<MateriaDTO> materias = adminService.getMateriasDTO();
+        List<MateriasResumo> materias = adminService.getMaterias();
         List<ProfessorResumo> professor = adminService.getProfessores();
         List<AlunoResumo> aluno = adminService.getAlunos();
         model.addAttribute("professores", professor);
         model.addAttribute("alunos", aluno);
         model.addAttribute("materias", materias);
-        model.addAttribute("materiaDTO", new MateriaDTO());
         return "gerenciarMaterias";
     }
 
@@ -93,14 +94,15 @@ public class AdministradorController {
     }
 
     @PostMapping("/salvarAluno")
-    public String criarAluno(@ModelAttribute AlunoDTO alunoDTO){
-        adminService.criarAluno(alunoDTO);
+    public String criarAluno(@ModelAttribute AlunoResumo alunoResumo){
+        adminService.criarAluno(alunoResumo);
         return "redirect:/";
     }
 
     @PostMapping("/salvarMateria")
-    public String criarMateria(@ModelAttribute MateriaDTO materiaDTO){
-       adminService.criarMateria(materiaDTO);
+    public String criarMateria(@RequestParam("professor_id") Integer professor_id, @ModelAttribute MateriasResumo materiasResumo){
+
+       adminService.criarMateria(materiasResumo, professor_id);
        return "redirect:/";  
     }  
 
@@ -140,8 +142,8 @@ public class AdministradorController {
     }
 
     @PostMapping("/editarProfessor/{professor_id}")
-    public String editarProfessor(@PathVariable Integer professor_id, @ModelAttribute ProfessorResumo professorResumo){
-        adminService.editarProfessor(professor_id, professorResumo);
+    public String editarProfessor(@RequestParam("materia_id") Integer materia_id, @PathVariable Integer professor_id, @ModelAttribute ProfessorResumo professorResumo){
+        adminService.editarProfessor(professor_id, professorResumo, materia_id);
         return "redirect:/gerenciarProfessor";
     }
 }
