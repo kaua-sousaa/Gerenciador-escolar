@@ -13,11 +13,11 @@ import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
-import kaua.sistema_gerenciamento_escolar.dto.dtosResumidos.AlunoResumo;
-import kaua.sistema_gerenciamento_escolar.dto.dtosResumidos.FaltaResumo;
-import kaua.sistema_gerenciamento_escolar.dto.dtosResumidos.MateriasResumo;
-import kaua.sistema_gerenciamento_escolar.dto.dtosResumidos.NotaResumo;
-import kaua.sistema_gerenciamento_escolar.dto.dtosResumidos.ProfessorResumo;
+import kaua.sistema_gerenciamento_escolar.dto.AlunoDTO;
+import kaua.sistema_gerenciamento_escolar.dto.FaltaDTO;
+import kaua.sistema_gerenciamento_escolar.dto.MateriaDTO;
+import kaua.sistema_gerenciamento_escolar.dto.NotaDTO;
+import kaua.sistema_gerenciamento_escolar.dto.ProfessorDTO;
 import kaua.sistema_gerenciamento_escolar.model.Aluno;
 import kaua.sistema_gerenciamento_escolar.model.Faltas;
 import kaua.sistema_gerenciamento_escolar.model.Materias;
@@ -50,15 +50,15 @@ public class ProfessorService {
     @Autowired
     private ModelMapper modelMapper;
 
-    public ProfessorResumo professorInformacoes(Integer professor_id){
+    public ProfessorDTO professorInformacoes(Integer professor_id){
         Professor professor = professorRepository.findById(professor_id)
         .orElseThrow(() -> new EntityNotFoundException("Professor nao encontrado"));   
         return toProfessorResumo(professor);
     }
 
-    public List<MateriasResumo> professorMaterias(Integer professor_id){
+    public List<MateriaDTO> professorMaterias(Integer professor_id){
         List <Materias> materias = materiasRepository.findByProfessorId(professor_id);
-        List<MateriasResumo> materiasResumo = new ArrayList<>(); 
+        List<MateriaDTO> materiasResumo = new ArrayList<>(); 
         
         for (Materias materia : materias){
             materiasResumo.add(toMateriasResumo(materia));
@@ -66,22 +66,22 @@ public class ProfessorService {
         return materiasResumo;
     }
 
-    public List<NotaResumo> professorNotas(Integer professor_id){
+    public List<NotaDTO> professorNotas(Integer professor_id){
         List<Materias> materia = materiasRepository.findByProfessorId(professor_id);
         List<Notas> notas = notasRepository.findByMateriaIn(materia);
-        List<NotaResumo> notaResumos = new ArrayList<>();
+        List<NotaDTO> notaResumos = new ArrayList<>();
         for (Notas nota : notas){
             notaResumos.add(toResumoNota(nota));
         }
         return notaResumos;
     }
 
-    public Set<FaltaResumo> professorFaltas(Integer professor_id){
+    public Set<FaltaDTO> professorFaltas(Integer professor_id){
         //Diferente, pois envia um resumo para cada aluno e não todos os resumos do banco
         List<Materias> materia = materiasRepository.findByProfessorId(professor_id);
 
         Set<Faltas> faltas = faltasRepository.findByMateriaIn(materia);
-        Map<String, FaltaResumo> faltaResumos = new HashMap<>();
+        Map<String, FaltaDTO> faltaResumos = new HashMap<>();
         
         for (Faltas falta : faltas){
             int alunoId = falta.getAluno().getId();
@@ -94,11 +94,11 @@ public class ProfessorService {
         return new HashSet<>(faltaResumos.values());
     }
 
-    public List<AlunoResumo> alunosProfessor(Integer professor_id){
+    public List<AlunoDTO> alunosProfessor(Integer professor_id){
         Materias materia = materiasRepository.findByProfessorId(professor_id).get(0);
         List<Aluno> alunos = alunoRepository.findAlunosByMateriasMatriculadas(materia);
         
-        List<AlunoResumo> alunosResumo = new ArrayList<>();
+        List<AlunoDTO> alunosResumo = new ArrayList<>();
         for (Aluno aluno : alunos){
             alunosResumo.add(toAlunoResumo(aluno));
         }
@@ -187,24 +187,24 @@ public class ProfessorService {
         
     } 
     
-    private MateriasResumo toMateriasResumo(Materias materia){
-        return modelMapper.map(materia, MateriasResumo.class);
+    private MateriaDTO toMateriasResumo(Materias materia){
+        return modelMapper.map(materia, MateriaDTO.class);
     }
 
-    private FaltaResumo toResumoFalta(Faltas falta) {
-        return modelMapper.map(falta, FaltaResumo.class);
+    private FaltaDTO toResumoFalta(Faltas falta) {
+        return modelMapper.map(falta, FaltaDTO.class);
     }
 
-    private NotaResumo toResumoNota(Notas nota) {
-        return modelMapper.map(nota, NotaResumo.class);
+    private NotaDTO toResumoNota(Notas nota) {
+        return modelMapper.map(nota, NotaDTO.class);
     }
 
-    private ProfessorResumo toProfessorResumo(Professor professor){
-        return modelMapper.map(professor, ProfessorResumo.class);
+    private ProfessorDTO toProfessorResumo(Professor professor){
+        return modelMapper.map(professor, ProfessorDTO.class);
     }
 
-    private AlunoResumo toAlunoResumo(Aluno aluno){
-        return modelMapper.map(aluno, AlunoResumo.class);
+    private AlunoDTO toAlunoResumo(Aluno aluno){
+        return modelMapper.map(aluno, AlunoDTO.class);
     }
 }
 

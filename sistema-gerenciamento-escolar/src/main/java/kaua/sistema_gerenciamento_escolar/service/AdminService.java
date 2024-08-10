@@ -19,9 +19,6 @@ import jakarta.transaction.Transactional;
 import kaua.sistema_gerenciamento_escolar.dto.AlunoDTO;
 import kaua.sistema_gerenciamento_escolar.dto.MateriaDTO;
 import kaua.sistema_gerenciamento_escolar.dto.ProfessorDTO;
-import kaua.sistema_gerenciamento_escolar.dto.dtosResumidos.AlunoResumo;
-import kaua.sistema_gerenciamento_escolar.dto.dtosResumidos.ProfessorResumo;
-import kaua.sistema_gerenciamento_escolar.dto.dtosResumidos.MateriasResumo;
 import kaua.sistema_gerenciamento_escolar.model.Aluno;
 import kaua.sistema_gerenciamento_escolar.model.Materias;
 import kaua.sistema_gerenciamento_escolar.model.Professor;
@@ -54,7 +51,6 @@ public class AdminService {
 
     public Map<String, Long> contarEntidades(){
         Map<String, Long> conteudo = new HashMap<>();
-
         conteudo.put("alunosQ", alunoRepository.count());
         conteudo.put("professoresQ", professorRepository.count());
         conteudo.put("materiasQ", materiasRepository.count());
@@ -67,31 +63,31 @@ public class AdminService {
         return alunosMatriculados;
     }
 
-    public List<AlunoResumo> getAlunos(){
+    public List<AlunoDTO> getAlunos(){
         return alunoRepository.findAll().stream()
         .map(this::toResumoAluno)
         .collect(Collectors.toList());
     }
-    public AlunoResumo getAluno(Integer aluno_id) {
+    public AlunoDTO getAluno(Integer aluno_id) {
         Aluno aluno = alunoRepository.findById(aluno_id)
         .orElseThrow(() -> new EntityNotFoundException("Aluno nao encontrado"));
 
         return toResumoAluno(aluno);
     }
 
-    public List<MateriasResumo> getMaterias(){
+    public List<MateriaDTO> getMaterias(){
         return materiasRepository.findAll().stream()
         .map(this::toResumoMaterias)
         .collect(Collectors.toList());
     }
 
-    public List<ProfessorResumo> getProfessores(){
+    public List<ProfessorDTO> getProfessores(){
         return professorRepository.findAll().stream()
         .map(this::toResumoProfessor)
         .collect(Collectors.toList());
     }   
 
-    public ProfessorResumo getProfessor(Integer professor_id){
+    public ProfessorDTO getProfessor(Integer professor_id){
         Professor professor = professorRepository.findById(professor_id)
         .orElseThrow(() -> new EntityNotFoundException("Professor nao encontrado"));
 
@@ -99,7 +95,7 @@ public class AdminService {
     }   
 
     @Transactional
-    public void criarAluno(AlunoResumo alunoResumo) {
+    public void criarAluno(AlunoDTO alunoResumo) {
         Aluno aluno = new Aluno();
 
         aluno.setNome(alunoResumo.getNome());
@@ -109,20 +105,11 @@ public class AdminService {
         aluno.setSenha(senha);
         aluno.setTelefone(alunoResumo.getTelefone());
         aluno.setDataNascimento(alunoResumo.getDataNascimento());
-
-        /* if (alunoDTO.getMateria_id() != null) {
-            Set<Materias> materias = new HashSet<>(materiasRepository.findAllById(alunoDTO.getMateria_id()));
-            aluno.setMateriasMatriculadas(materias);
-
-            for (Materias materia : materias) {
-                materia.getAlunos().add(aluno);
-            }
-        } */
         alunoRepository.save(aluno);
     }
 
     @Transactional
-    public void criarMateria(MateriasResumo materiaResumo, Integer professor_id) {
+    public void criarMateria(MateriaDTO materiaResumo, Integer professor_id) {
         Materias materia = new Materias();
         // verificar se já existe essa matéria
 
@@ -148,21 +135,20 @@ public class AdminService {
     }
 
     @Transactional
-    public ProfessorResumo criarProfessor(ProfessorDTO professorDTO) {
+    public void criarProfessor(ProfessorDTO professorResumo) {
         Professor professor = new Professor();
 
-        professor.setNome(professorDTO.getNome());
-        professor.setEmail(professorDTO.getEmail());
-        String senha = gerarSenhaBaseadaEmData(professorDTO.getDataNascimento());
+        professor.setNome(professorResumo.getNome());
+        professor.setEmail(professorResumo.getEmail());
+        String senha = gerarSenhaBaseadaEmData(professorResumo.getDataNascimento());
         professor.setSenha(senha);
-        professor.setTelefone(professorDTO.getTelefone());
-        professor.setDataNascimento(professorDTO.getDataNascimento());
+        professor.setTelefone(professorResumo.getTelefone());
+        professor.setDataNascimento(professorResumo.getDataNascimento());
         professorRepository.save(professor);
-        return toResumoProfessor(professor);
     }
 
     @Transactional
-    public MateriasResumo adicionarAlunoMateria(Integer materia_id, Set<Integer> alunos_id) {
+    public void adicionarAlunoMateria(Integer materia_id, Set<Integer> alunos_id) {
         Materias materia = materiasRepository.findById(materia_id)
                 .orElseThrow(() -> new EntityNotFoundException("Materia nao encontrada"));
         Set<Aluno> alunos = new HashSet<>(alunoRepository.findAllById(alunos_id));
@@ -174,7 +160,6 @@ public class AdminService {
             aluno.getMateriasMatriculadas().add(materia);
         }
         materiasRepository.save(materia);
-        return toResumoMaterias(materia);
     }
 
     @Transactional
@@ -205,7 +190,7 @@ public class AdminService {
     }
 
     @Transactional
-    public void editarAluno(Integer aluno_id, AlunoResumo alunoResumo){
+    public void editarAluno(Integer aluno_id, AlunoDTO alunoResumo){
         Aluno aluno = alunoRepository.findById(aluno_id)
         .orElseThrow(() -> new EntityNotFoundException("Aluno não encontrado"));
 
@@ -219,7 +204,7 @@ public class AdminService {
     }
 
      @Transactional
-    public void editarMateria(Integer materia_id, MateriasResumo materiasResumo){
+    public void editarMateria(Integer materia_id, MateriaDTO materiasResumo){
         Materias materia = materiasRepository.findById(materia_id)
         .orElseThrow(() -> new EntityNotFoundException("Materia não encontrada"));
         Professor professor = professorRepository.findById(materiasResumo.getProfessor().getId()).orElseThrow(()-> new EntityNotFoundException("Professor nao encontrado"));
@@ -231,31 +216,33 @@ public class AdminService {
     }
  
     @Transactional
-    public void editarProfessor(Integer professor_id, ProfessorResumo professorResumo, Integer materia_id){
+    public void editarProfessor(Integer professor_id, ProfessorDTO professorResumo, Integer materia_id){
         Professor professor = professorRepository.findById(professor_id)
         .orElseThrow(() -> new EntityNotFoundException("Professor não encontrado"));
-        Materias materia = materiasRepository.findById(materia_id)
-        .orElseThrow(() -> new EntityNotFoundException("Materia nao encontrada"));
-        materia.setProfessor(professor);
         professor.setNome(professorResumo.getNome());
         professor.setEmail(professorResumo.getEmail());
         professor.setTelefone(professorResumo.getTelefone());
         professor.setDataNascimento(professorResumo.getDataNascimento());
         professorRepository.save(professor);
-        materiasRepository.save(materia);
+        if(materia_id!=null){
+            Materias materia = materiasRepository.findById(materia_id)
+            .orElseThrow(() -> new EntityNotFoundException("Materia nao encontrada"));
+            materia.setProfessor(professor);
+            materiasRepository.save(materia);
+        }   
     }
 
 
-    private MateriasResumo toResumoMaterias(Materias materias) {
-        return modelMapper.map(materias, MateriasResumo.class);
+    private MateriaDTO toResumoMaterias(Materias materias) {
+        return modelMapper.map(materias, MateriaDTO.class);
     }
 
-    private AlunoResumo toResumoAluno(Aluno aluno) {
-        return modelMapper.map(aluno, AlunoResumo.class);
+    private AlunoDTO toResumoAluno(Aluno aluno) {
+        return modelMapper.map(aluno, AlunoDTO.class);
     }
 
-    private ProfessorResumo toResumoProfessor(Professor professor) {
-        return modelMapper.map(professor, ProfessorResumo.class);
+    private ProfessorDTO toResumoProfessor(Professor professor) {
+        return modelMapper.map(professor, ProfessorDTO.class);
     }
     private String gerarSenhaBaseadaEmData(LocalDate dataNascimento) {
     return dataNascimento.format(DateTimeFormatter.ofPattern("ddMMyyyy"));

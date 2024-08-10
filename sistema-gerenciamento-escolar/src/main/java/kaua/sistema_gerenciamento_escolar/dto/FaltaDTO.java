@@ -1,4 +1,4 @@
-package kaua.sistema_gerenciamento_escolar.dto.dtosResumidos;
+package kaua.sistema_gerenciamento_escolar.dto;
 
 import java.time.LocalDate;
 
@@ -13,12 +13,12 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class FaltaResumo {
+public class FaltaDTO {
     private Integer id;
     private LocalDate data;
     private int quantidade;
     private String situacao;
     private int totalFaltas;
-    private MateriasResumo materia;
-    private AlunoResumoParaFalta aluno;
+    private MateriaDTO materia;
+    private AlunoParaFaltaDTO aluno;
 }

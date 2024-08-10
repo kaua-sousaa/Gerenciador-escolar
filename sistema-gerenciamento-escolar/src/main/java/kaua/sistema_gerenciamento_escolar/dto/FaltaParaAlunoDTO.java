@@ -1,5 +1,6 @@
 package kaua.sistema_gerenciamento_escolar.dto;
 
+import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,10 +10,10 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class NotasDTO {
-    private int id;
-    private double nota1;
-    private double nota2;
-    private Integer materia_id;
-    private Integer aluno_id;
+public class FaltaParaAlunoDTO {
+    
+    private LocalDate data;
+    private String situacao;
+    private int totalFaltas;
+    private MateriaDTO materia;
 }

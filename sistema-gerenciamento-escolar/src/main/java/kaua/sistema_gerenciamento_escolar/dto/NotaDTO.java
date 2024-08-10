@@ -1,4 +1,4 @@
-package kaua.sistema_gerenciamento_escolar.dto.dtosResumidos;
+package kaua.sistema_gerenciamento_escolar.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,10 +9,10 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class NotaResumo {
+public class NotaDTO {
     private Integer id;
     private Double nota1;
     private Double nota2;
-    private MateriasResumo materia;
-    private AlunoResumo alunos;
+    private MateriaDTO materia;
+    private AlunoDTO alunos;
 }

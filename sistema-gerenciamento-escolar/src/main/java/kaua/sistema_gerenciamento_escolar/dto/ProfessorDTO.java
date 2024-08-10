@@ -11,12 +11,11 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-
 public class ProfessorDTO {
-    private int id;
+    private Integer id;
     private String nome;
     private String email;
-    private String senha;
     private String telefone;
     private LocalDate dataNascimento;
+    private MateriaDTO materiaResumo;
 }
