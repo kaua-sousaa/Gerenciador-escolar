@@ -20,4 +20,6 @@ public interface NotasRepository extends JpaRepository<Notas, Integer> {
 
     List<Notas> findByAlunosId(Integer aluno_id);
     List<Notas> findByMateriaIn(List<Materias> materia);
+
+    List<Notas> findByMateriaId(Integer materia_id);
 }

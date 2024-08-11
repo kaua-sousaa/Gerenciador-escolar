@@ -20,7 +20,9 @@ import kaua.sistema_gerenciamento_escolar.dto.AlunoDTO;
 import kaua.sistema_gerenciamento_escolar.dto.MateriaDTO;
 import kaua.sistema_gerenciamento_escolar.dto.ProfessorDTO;
 import kaua.sistema_gerenciamento_escolar.model.Aluno;
+import kaua.sistema_gerenciamento_escolar.model.Faltas;
 import kaua.sistema_gerenciamento_escolar.model.Materias;
+import kaua.sistema_gerenciamento_escolar.model.Notas;
 import kaua.sistema_gerenciamento_escolar.model.Professor;
 import kaua.sistema_gerenciamento_escolar.repository.AlunoRepository;
 import kaua.sistema_gerenciamento_escolar.repository.FaltasRepository;
@@ -187,6 +189,24 @@ public class AdminService {
         }
 
         professorRepository.delete(professor);
+    }
+
+    public void excluirProfessorMateria(Integer materia_id){
+        Materias materia = materiasRepository.findById(materia_id)
+        .orElseThrow(() -> new EntityNotFoundException("materia não encontrada"));
+        materia.setProfessor(null);
+        materiasRepository.save(materia);
+    }
+
+    public void excluirMateria(Integer materia_id){
+        //ao apagar a materia, todos os registros relacionados a ela são apagados (arrumar isso depois)
+        Materias materia = materiasRepository.findById(materia_id)
+        .orElseThrow(() -> new EntityNotFoundException("materia não encontrada"));
+        List<Faltas> faltas = faltasRepository.findByMateriaId(materia_id);
+        List<Notas> notas = notasRepository.findByMateriaId(materia_id);
+        faltasRepository.deleteAll(faltas); // deletando todas as faltas relacionadas a essa materia
+        notasRepository.deleteAll(notas); // deletando todas as notas relacionadas a essa materia
+        materiasRepository.delete(materia);
     }
 
     @Transactional

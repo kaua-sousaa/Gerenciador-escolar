@@ -40,10 +40,10 @@ public class AlunoController {
 
     @GetMapping("/aluno")
     public String indexAluno(Model model){
-        AlunoDTO alunoResumo = alunoService.alunoInformacoes(29);
-        List<FaltaDTO> faltaResumo = alunoService.faltasHistorico(29);
-        List<NotaDTO> notaResumo = alunoService.notaHistorico(29);
-        List<MateriaDTO> materiasResumos = alunoService.materiasAluno(29);
+        AlunoDTO alunoResumo = alunoService.alunoInformacoes(30);
+        List<FaltaDTO> faltaResumo = alunoService.faltasHistorico(30);
+        List<NotaDTO> notaResumo = alunoService.notaHistorico(30);
+        List<MateriaDTO> materiasResumos = alunoService.materiasAluno(30);
         model.addAttribute("aluno", alunoResumo); //info aluno
         model.addAttribute("faltas", faltaResumo); //info faltas
         model.addAttribute("notas", notaResumo); // info notas

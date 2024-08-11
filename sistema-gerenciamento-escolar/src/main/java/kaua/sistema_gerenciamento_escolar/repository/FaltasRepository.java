@@ -17,4 +17,6 @@ public interface FaltasRepository extends JpaRepository<Faltas, Integer>{
 
     Set<Faltas> findByMateriaIn(List<Materias> materia);
     void deleteByAlunoId(Integer aluno_id);
+
+    List<Faltas> findByMateriaId(Integer materia_id);
 }

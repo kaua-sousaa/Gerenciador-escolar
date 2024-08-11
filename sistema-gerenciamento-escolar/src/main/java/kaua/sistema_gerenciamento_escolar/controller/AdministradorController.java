@@ -96,7 +96,6 @@ public class AdministradorController {
 
     @PostMapping("/salvarMateria")
     public String criarMateria(@RequestParam(value="professor_id", required = false) Integer professor_id, @ModelAttribute MateriaDTO materiasResumo){
-
        adminService.criarMateria(materiasResumo, professor_id);
        return "redirect:/";  
     }  
@@ -112,7 +111,6 @@ public class AdministradorController {
         Set<Integer> alunos_id = alunosId.stream()
             .map(Integer::parseInt)
             .collect(Collectors.toSet());
-
         adminService.adicionarAlunoMateria(materia_id, alunos_id);
 
         return "redirect:/gerenciarMaterias";
@@ -128,6 +126,18 @@ public class AdministradorController {
     public String deletarProfessor(@PathVariable Integer professor_id){
         adminService.excluirProfessor(professor_id);
         return "redirect:/gerenciarProfessor";
+    }
+
+    @GetMapping("/deletarProfessorMateria/{materia_id}")
+    public String deletarProfessorMateria(@PathVariable Integer materia_id){
+        adminService.excluirProfessorMateria(materia_id);
+        return "redirect:/gerenciarMaterias";
+    }
+
+    @GetMapping("/deletarMateria/{materia_id}")
+    public String deletarMateria(@PathVariable Integer materia_id){
+        adminService.excluirMateria(materia_id);
+        return "redirect:/gerenciarMaterias";
     }
 
     @PostMapping("/editarAluno/{aluno_id}")

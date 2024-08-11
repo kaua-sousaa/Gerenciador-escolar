@@ -33,11 +33,11 @@ public class ProfessorController {
 
     @GetMapping("/professor")
     public String indexProfessor(Model model){
-        ProfessorDTO professorResumo = professorService.professorInformacoes(5);
-        List<MateriaDTO> materiasResumo = professorService.professorMaterias(5);
-        List<NotaDTO> notaResumo = professorService.professorNotas(5);
-        Set<FaltaDTO> faltaResumo = professorService.professorFaltas(5);
-        List<AlunoDTO> alunoResumo = professorService.alunosProfessor(5);
+        ProfessorDTO professorResumo = professorService.professorInformacoes(6);
+        List<MateriaDTO> materiasResumo = professorService.professorMaterias(6);
+        List<NotaDTO> notaResumo = professorService.professorNotas(6);
+        Set<FaltaDTO> faltaResumo = professorService.professorFaltas(6);
+        List<AlunoDTO> alunoResumo = professorService.alunosProfessor(6);
         
         //converter para usar no thymeleaf
         List<FaltaDTO> faltaResumoList = new ArrayList<>(faltaResumo);
@@ -55,8 +55,8 @@ public class ProfessorController {
 
     @GetMapping("/professorTurmaGet/{materia_id}")
     public String professorTurmasGet(@PathVariable Integer materia_id, Model model){
-        List<AlunoDTO> alunoResumo = professorService.alunosProfessor(5);
-        List<MateriaDTO> materiasResumo = professorService.professorMaterias(5);
+        List<AlunoDTO> alunoResumo = professorService.alunosProfessor(6);
+        List<MateriaDTO> materiasResumo = professorService.professorMaterias(6);
         MateriaDTO materiaSelecionada = null;
         for (MateriaDTO materia : materiasResumo){
             if(materia.getId().equals(materia_id)){
@@ -71,14 +71,14 @@ public class ProfessorController {
 
     @GetMapping("/professorFaltasGet/{materia_id}")
     public String aplicarFaltaGet(@PathVariable Integer materia_id, Model model){
-        List<AlunoDTO> alunosResumo = professorService.alunosProfessor(5);
+        List<AlunoDTO> alunosResumo = professorService.alunosProfessor(6);
         model.addAttribute("alunos", alunosResumo);
         return "professorFaltas";
     }
 
     @GetMapping("/professorNotasGet/{materia_id}")
     public String aplicarNotasGet(@PathVariable Integer materia_id, Model model){
-        List<AlunoDTO> alunosResumo = professorService.alunosProfessor(5);
+        List<AlunoDTO> alunosResumo = professorService.alunosProfessor(6);
         Map<Integer, NotaDTO> notasMap = new HashMap<>();
         for (AlunoDTO aluno : alunosResumo){
             for(NotaDTO nota: aluno.getHistorico()){
@@ -94,7 +94,7 @@ public class ProfessorController {
 
     @GetMapping("/professorMateriaGet")
     public String escolherMateriaFalta(Model model){
-        List<MateriaDTO> materiasResumo = professorService.professorMaterias(5);
+        List<MateriaDTO> materiasResumo = professorService.professorMaterias(6);
         model.addAttribute("materias", materiasResumo);
 
         return "professorMateria";

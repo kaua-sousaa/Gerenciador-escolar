@@ -35,10 +35,13 @@
                             <td th:text="${materia.cargaHoraria}"></td>
                             <td>
                                 <span th:each="professor : ${professores}"
-                                th:if="${materia.professor != null && materia.professor.id == professor.id}"
-                                th:text="${professor.nome}">
+                                th:if="${materia.professor != null && materia.professor.id == professor.id}">
+                                    <span th:text="${professor.nome}"></span>
+                                    <a th:href="@{/deletarProfessorMateria/{materia_id}(materia_id=${materia.id})}">
+                                        <img src="https://img.icons8.com/?size=100&id=71200&format=png&color=000000" alt="Deletar professor" width="18px" height="18px">
+                                    </a>
                                 </span>
-                                <span th:if="${materia.professor == null}" th:text="'Nao ha professor'"></span>
+                                <span th:if="${materia.professor == null}" th:text="'Nao ha professor'"></span>                               
                             </td>
                             <td>
                                 <span th:each="professor : ${professores}"
@@ -50,7 +53,10 @@
                                 </span>
                                 <span th:if="${materia.professor == null}">
                                     <a href="" class="btn btn-secondary disabled" tabindex="-1" aria-disabled="true">Inserir alunos</a>
-                                </span>    
+                                </span> 
+                                <span>
+                                    <a th:href="@{/deletarMateria/{materia_id}(materia_id=${materia.id})}"><img src="https://img.icons8.com/?size=100&id=85081&format=png&color=000000" alt=""  width="20px" height="20px"></a>
+                                </span>   
                             </td>
                         </tr>
                     </tbody>
