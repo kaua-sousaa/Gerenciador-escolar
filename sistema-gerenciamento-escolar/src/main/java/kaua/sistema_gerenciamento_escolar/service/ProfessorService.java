@@ -108,11 +108,16 @@ public class ProfessorService {
     @Transactional
     public void aplicarNotas(Integer materia_id, List<Integer> alunosId, List<Double> nota1, List<Double> nota2) {
         boolean nota2Existe = true;
-        for (int i=0; i<nota2.size() && nota2Existe;i++){
-            if (nota2.get(i) == null){
-                nota2Existe = false;
+        if (!nota2.isEmpty()){
+            for (int i=0; i<alunosId.size() && nota2Existe;i++){
+                if (nota2.get(i) == null){
+                    nota2Existe = false;
+                }
             }
+        }else{
+            nota2Existe = false;
         }
+        
         for (int i=0;i<alunosId.size();i++){
             if ((nota1.get(i) == null || nota1.get(i) < 0) || nota1.get(i) >10){
                 throw new IllegalArgumentException("A nota não pode ser menor que 0 ou maior que 10");

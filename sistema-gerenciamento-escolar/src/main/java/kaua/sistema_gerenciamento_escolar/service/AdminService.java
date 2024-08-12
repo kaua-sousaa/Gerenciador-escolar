@@ -208,7 +208,7 @@ public class AdminService {
         notasRepository.deleteAll(notas); // deletando todas as notas relacionadas a essa materia
         materiasRepository.delete(materia);
     }
-
+    
     @Transactional
     public void editarAluno(Integer aluno_id, AlunoDTO alunoResumo){
         Aluno aluno = alunoRepository.findById(aluno_id)
