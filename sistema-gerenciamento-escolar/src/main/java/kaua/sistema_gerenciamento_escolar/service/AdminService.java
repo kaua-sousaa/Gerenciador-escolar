@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -99,12 +100,14 @@ public class AdminService {
     @Transactional
     public void criarAluno(AlunoDTO alunoResumo) {
         Aluno aluno = new Aluno();
+        var bCryptEncoder = new BCryptPasswordEncoder();
 
         aluno.setNome(alunoResumo.getNome());
         aluno.setEmail(alunoResumo.getEmail());
         aluno.setMatricula(alunoResumo.getMatricula());
+        //String senha = gerarSenhaBaseadaEmData(alunoResumo.getDataNascimento());
         String senha = gerarSenhaBaseadaEmData(alunoResumo.getDataNascimento());
-        aluno.setSenha(senha);
+        aluno.setSenha(bCryptEncoder.encode(senha));
         aluno.setTelefone(alunoResumo.getTelefone());
         aluno.setDataNascimento(alunoResumo.getDataNascimento());
         alunoRepository.save(aluno);
@@ -268,3 +271,4 @@ public class AdminService {
     return dataNascimento.format(DateTimeFormatter.ofPattern("ddMMyyyy"));
 }
 }
+

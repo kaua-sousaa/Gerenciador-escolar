@@ -28,6 +28,9 @@ public class Administrador {
     private String nome;
 
     @Column(nullable = false)
+    private String email;
+
+    @Column(nullable = false)
     private String username;
 
     @Column(nullable = false)

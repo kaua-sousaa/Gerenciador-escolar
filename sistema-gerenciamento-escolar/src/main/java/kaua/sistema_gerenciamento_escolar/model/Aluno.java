@@ -63,3 +63,4 @@ public class Aluno {
     @JsonManagedReference
     private List<Faltas> faltas;
 }
+

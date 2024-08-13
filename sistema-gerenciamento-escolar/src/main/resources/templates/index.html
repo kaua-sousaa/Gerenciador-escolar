@@ -51,6 +51,7 @@
                             <div class="card-body">
                                 <h5 class="card-title">Adicionar Aluno</h5>
                                 <form action="/salvarAluno" method="post">
+                                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                                     <div class="form-group">
                                         <label for="nomeAluno">Nome</label>
                                         <input type="text" id="nomeAluno" name="nome" class="form-control" required>
@@ -81,6 +82,7 @@
                             <div class="card-body">
                                 <h5 class="card-title">Adicionar Professor</h5>
                                 <form action="/salvarProfessor" method="post">
+                                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                                     <div class="form-group">
                                         <label for="nomeProfessor">Nome</label>
                                         <input type="text" id="nomeProfessor" name="nome" class="form-control" required>
@@ -107,6 +109,7 @@
                             <div class="card-body">
                                 <h5 class="card-title">Adicionar Matéria</h5>
                                 <form th:action="@{/salvarMateria}" method="post">
+                                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                                     <div class="form-group">
                                         <label for="nomeMateria">Nome da matéria</label>
                                         <input type="text" id="nomeMateria" name="nome" class="form-control" required>

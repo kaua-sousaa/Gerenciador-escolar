@@ -18,4 +18,6 @@ public interface AlunoRepository extends JpaRepository<Aluno, Integer> {
     Set<Integer> findAlunoIdsByMateriaId(@Param("materiaId") Integer materiaId);
 
     List<Aluno> findAlunosByMateriasMatriculadas(Materias materia);
+
+    Aluno findByEmail(String email);
 }
