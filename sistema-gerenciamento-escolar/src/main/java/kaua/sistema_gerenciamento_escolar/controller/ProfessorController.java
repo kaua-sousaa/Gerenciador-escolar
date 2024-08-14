@@ -53,7 +53,7 @@ public class ProfessorController {
         return "professor";
     }
 
-    @GetMapping("/professorTurmaGet/{materia_id}")
+    @GetMapping("/professor/professorTurmaGet/{materia_id}")
     public String professorTurmasGet(@PathVariable Integer materia_id, Model model){
         List<AlunoDTO> alunoResumo = professorService.alunosProfessor(9);
         List<MateriaDTO> materiasResumo = professorService.professorMaterias(9);
@@ -69,14 +69,14 @@ public class ProfessorController {
         return "professorTurma";
     }
 
-    @GetMapping("/professorFaltasGet/{materia_id}")
+    @GetMapping("/professor/professorFaltasGet/{materia_id}")
     public String aplicarFaltaGet(@PathVariable Integer materia_id, Model model){
         List<AlunoDTO> alunosResumo = professorService.alunosProfessor(9);
         model.addAttribute("alunos", alunosResumo);
         return "professorFaltas";
     }
 
-    @GetMapping("/professorNotasGet/{materia_id}")
+    @GetMapping("/professor/professorNotasGet/{materia_id}")
     public String aplicarNotasGet(@PathVariable Integer materia_id, Model model){
         List<AlunoDTO> alunosResumo = professorService.alunosProfessor(9);
         Map<Integer, NotaDTO> notasMap = new HashMap<>();
@@ -92,7 +92,7 @@ public class ProfessorController {
         return "professorNotas";
     }
 
-    @GetMapping("/professorMateriaGet")
+    @GetMapping("/professor/professorMateriaGet")
     public String escolherMateriaFalta(Model model){
         List<MateriaDTO> materiasResumo = professorService.professorMaterias(9);
         model.addAttribute("materias", materiasResumo);
@@ -100,13 +100,13 @@ public class ProfessorController {
         return "professorMateria";
     }
 
-    @PostMapping("/salvarNotas/{materia_id}")
+    @PostMapping("/professor/salvarNotas/{materia_id}")
     public String salvarNotas(@PathVariable Integer materia_id,@RequestParam("alunoId[]") List<Integer> alunosId, @RequestParam("nota1[]") List<Double> nota1, @RequestParam("nota2[]") List<Double> nota2){
         professorService.aplicarNotas(materia_id, alunosId, nota1, nota2);
         return "redirect:/professor";
     }
 
-    @PostMapping("/aplicarFalta/{materia_id}")
+    @PostMapping("/professor/aplicarFalta/{materia_id}")
     public String aplicarFalta(@PathVariable int materia_id, @RequestParam("alunoId[]") List<Integer> alunosId, @RequestParam("quantidade[]") List<Integer> quantidades){
         professorService.aplicarFaltas(materia_id, alunosId, quantidades);
         return "redirect:/professor";

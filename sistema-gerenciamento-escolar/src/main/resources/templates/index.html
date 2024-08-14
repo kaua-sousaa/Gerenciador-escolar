@@ -21,7 +21,7 @@
                             <div class="card-body">
                                 <h5 class="card-title">Total de Alunos</h5>
                                 <p class="card-text" id="total-alunos" th:text="${alunQ}"></p>
-                                <a href="/gerenciarAluno" class="btn btn-primary">Ver Alunos</a>
+                                <a href="/administrador/gerenciarAluno" class="btn btn-primary">Ver Alunos</a>
                             </div>
                         </div>
                     </div>
@@ -30,7 +30,7 @@
                             <div class="card-body">
                                 <h5 class="card-title">Total de Professores</h5>
                                 <p class="card-text" id="total-professores" th:text="${profQ}"></p>
-                                <a href="/gerenciarProfessor" class="btn btn-primary">Ver Professores</a>
+                                <a href="/administrador/gerenciarProfessor" class="btn btn-primary">Ver Professores</a>
                             </div>
                         </div>
                     </div>
@@ -39,7 +39,7 @@
                             <div class="card-body">
                                 <h5 class="card-title">Total de Matérias</h5>
                                 <p class="card-text" id="total-materias" th:text="${mateQ}"></p>
-                                <a href="/gerenciarMaterias" class="btn btn-primary">Ver Matérias</a>
+                                <a href="/administrador/gerenciarMaterias" class="btn btn-primary">Ver Matérias</a>
                             </div>
                         </div>
                     </div>
@@ -50,7 +50,7 @@
                         <div class="card h-100 dashboard-card">
                             <div class="card-body">
                                 <h5 class="card-title">Adicionar Aluno</h5>
-                                <form action="/salvarAluno" method="post">
+                                <form action="/administrador/salvarAluno" method="post">
                                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                                     <div class="form-group">
                                         <label for="nomeAluno">Nome</label>
@@ -81,7 +81,7 @@
                         <div class="card h-100 dashboard-card">
                             <div class="card-body">
                                 <h5 class="card-title">Adicionar Professor</h5>
-                                <form action="/salvarProfessor" method="post">
+                                <form action="/administrador/salvarProfessor" method="post">
                                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                                     <div class="form-group">
                                         <label for="nomeProfessor">Nome</label>
@@ -108,7 +108,7 @@
                         <div class="card h-100 dashboard-card">
                             <div class="card-body">
                                 <h5 class="card-title">Adicionar Matéria</h5>
-                                <form th:action="@{/salvarMateria}" method="post">
+                                <form th:action="@{/administrador/salvarMateria}" method="post">
                                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                                     <div class="form-group">
                                         <label for="nomeMateria">Nome da matéria</label>

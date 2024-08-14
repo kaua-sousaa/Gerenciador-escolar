@@ -15,11 +15,26 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         return http.authorizeHttpRequests( auth -> auth
-            .requestMatchers("/").permitAll()
+            .requestMatchers("/login").permitAll()
+            .requestMatchers("/administrador/**").hasRole("ADMIN")
+            .requestMatchers("/aluno/**").hasRole("ALUNO")
+            .requestMatchers("/professor/**").hasRole("PROFESSOR")
             .anyRequest().authenticated()
         )
         .formLogin(form -> form
-                    .defaultSuccessUrl("/", true)
+                    .successHandler((request, response, authentication) -> {
+                        String role = authentication.getAuthorities().iterator().next().getAuthority();
+                        switch (role) {
+                            case "ROLE_ADMIN":
+                                response.sendRedirect("/administrador");break;
+                            case "ROLE_ALUNO":
+                                response.sendRedirect("/aluno");break;
+                            case "ROLE_PROFESSOR":
+                                response.sendRedirect("/professor");break;
+                            default:
+                                response.sendRedirect("/login");break;
+                        }
+                    })
         )
         .logout(config -> config.logoutSuccessUrl("/"))
         .build();

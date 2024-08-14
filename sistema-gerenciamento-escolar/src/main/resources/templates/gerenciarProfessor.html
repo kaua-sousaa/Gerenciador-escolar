@@ -38,8 +38,8 @@
                                 <td th:text="${professor.email}"></td>
                                 <td th:text="${professor.telefone}"></td>
                                 <td>
-                                    <a th:href="@{/editarProfessorGet/{professor_id}(professor_id=${professor.id})}"class="btn btn-warning">Editar</a>
-                                    <form th:action="@{/deletarProfessor/{id}(id=${professor.id})}" method="post"
+                                    <a th:href="@{/administrador/editarProfessorGet/{professor_id}(professor_id=${professor.id})}"class="btn btn-warning">Editar</a>
+                                    <form th:action="@{/administrador/deletarProfessor/{id}(id=${professor.id})}" method="post"
                                         style="display:inline;">
                                         <input type="hidden" name="_method" value="delete" />
                                         <button type="submit" class="btn btn-danger">Excluir</button>

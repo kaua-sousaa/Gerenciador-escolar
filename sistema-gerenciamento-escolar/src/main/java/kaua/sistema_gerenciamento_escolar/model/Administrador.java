@@ -35,4 +35,7 @@ public class Administrador {
 
     @Column(nullable = false)
     private String senha;
+
+    @Column(nullable = false)
+    private String role_nome;
 }

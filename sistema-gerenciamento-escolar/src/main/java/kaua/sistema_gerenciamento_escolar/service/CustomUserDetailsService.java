@@ -33,7 +33,7 @@ public class CustomUserDetailsService implements UserDetailsService{
         if (aluno != null){
             return User.withUsername(aluno.getEmail())
             .password(aluno.getSenha())
-            .roles("aluno")
+            .roles("ALUNO")
             .build();
         }
 
@@ -42,7 +42,7 @@ public class CustomUserDetailsService implements UserDetailsService{
         if (professor != null){
             return User.withUsername(professor.getEmail())
             .password(professor.getSenha())
-            .roles("professor")
+            .roles("PROFESSOR")
             .build();
         }
 
@@ -50,7 +50,7 @@ public class CustomUserDetailsService implements UserDetailsService{
         if (adm!=null){
             return User.withUsername(adm.getEmail())
             .password(adm.getSenha())
-            .roles("admin")
+            .roles("ADMIN")
             .build();
         }
 

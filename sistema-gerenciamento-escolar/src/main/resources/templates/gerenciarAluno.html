@@ -38,8 +38,8 @@
                             <td th:text="${aluno.dataNascimento}"></td>
                             <td th:text="${aluno.telefone}"></td>
                             <td>
-                                <a th:href="@{/editarAlunoGet/{id}(id=${aluno.id})}" class="btn btn-warning">Editar</a>
-                                <form th:action="@{/deletarAluno/{id}(id=${aluno.id})}" method="post" style="display:inline;">
+                                <a th:href="@{/administrador/editarAlunoGet/{id}(id=${aluno.id})}" class="btn btn-warning">Editar</a>
+                                <form th:action="@{/administrador/deletarAluno/{id}(id=${aluno.id})}" method="post" style="display:inline;">
                                     <input type="hidden" name="_method" value="delete" />
                                     <button type="submit" class="btn btn-danger">Excluir</button>
                                 </form>

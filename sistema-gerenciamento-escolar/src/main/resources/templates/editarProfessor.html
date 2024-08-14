@@ -19,7 +19,7 @@
                 <h1 class="my-4">Editar Professores</h1>
                 <div class="mt-5">
                     <h2>Professor</h2>
-                    <form th:action="@{/editarProfessor/{professor_id}(professor_id=${professor.id})}" method="post">
+                    <form th:action="@{/administrador/editarProfessor/{professor_id}(professor_id=${professor.id})}" method="post">
                         <div class="form-row">
                             <div class="col-md-4 mb-3">
                                 <label for="validationDefault01">Nome</label>

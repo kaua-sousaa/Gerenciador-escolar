@@ -26,7 +26,12 @@ public class AdministradorController {
     @Autowired
     private AdminService adminService;
 
-    @GetMapping("/gerenciarMateriasAdicionar/{materia_id}")
+    @GetMapping("/")
+    public String redirecionarIndex(){
+        return "redirect:/administrador";
+    }
+
+    @GetMapping("/administrador/gerenciarMateriasAdicionar/{materia_id}")
     public String adicionarMateriaEmAluno(@PathVariable Integer materia_id, Model model){
         List<AlunoDTO> alunos = adminService.getAlunos();
         Set<Integer> alunosMatriculados = adminService.getAlunosMatriculados(materia_id);
@@ -35,7 +40,7 @@ public class AdministradorController {
         return "adicionarMateriaAluno";
     }
 
-    @GetMapping("/editarProfessorGet/{professor_id}")
+    @GetMapping("/administrador/editarProfessorGet/{professor_id}")
     public String editarProfessor(@PathVariable Integer professor_id, Model model){
         ProfessorDTO professor = adminService.getProfessor(professor_id);
         List<MateriaDTO> materias = adminService.getMaterias();
@@ -44,14 +49,14 @@ public class AdministradorController {
         return "editarProfessor";
     }
 
-    @GetMapping("/editarAlunoGet/{aluno_id}")
+    @GetMapping("/administrador/editarAlunoGet/{aluno_id}")
     public String editarAluno(@PathVariable Integer aluno_id, Model model){
         AlunoDTO aluno = adminService.getAluno(aluno_id); 
         model.addAttribute("aluno", aluno);
         return "editarAluno";
     }
 
-    @GetMapping("/gerenciarMaterias")
+    @GetMapping("/administrador/gerenciarMaterias")
     public String listaGerenciarMaterias(Model model){
         List<MateriaDTO> materias = adminService.getMaterias();
         List<ProfessorDTO> professor = adminService.getProfessores();
@@ -62,7 +67,7 @@ public class AdministradorController {
         return "gerenciarMaterias";
     }
 
-    @GetMapping("/gerenciarAluno")
+    @GetMapping("/administrador/gerenciarAluno")
     public String listaGerenciarAlunos(Model model){
         List<AlunoDTO> aluno = adminService.getAlunos();
         List<MateriaDTO> materias = adminService.getMaterias();
@@ -71,14 +76,14 @@ public class AdministradorController {
         return "gerenciarAluno";
     }
 
-    @GetMapping("/gerenciarProfessor")
+    @GetMapping("/administrador/gerenciarProfessor")
     public String listaGerenciarProfessores (Model model){
         List<ProfessorDTO> professor = adminService.getProfessores();
         model.addAttribute("professores", professor);
         return "gerenciarProfessor";
     }
 
-    @GetMapping("/")
+    @GetMapping("/administrador")
     public String indexConteudo (Model model){
         List<ProfessorDTO> professor = adminService.getProfessores();  //Q = quantidade
         Map<String, Long> conteudo = adminService.contarEntidades();
@@ -89,67 +94,69 @@ public class AdministradorController {
         return "index";
     }
 
-    @PostMapping("/salvarAluno")
+    @PostMapping("/administrador/salvarAluno")
     public String criarAluno(@ModelAttribute AlunoDTO alunoResumo){
         adminService.criarAluno(alunoResumo);
-        return "redirect:/";
+        return "redirect:/administrador";
     }
 
-    @PostMapping("/salvarMateria")
+    @PostMapping("/administrador/salvarMateria")
     public String criarMateria(@RequestParam(value="professor_id", required = false) Integer professor_id, @ModelAttribute MateriaDTO materiasResumo){
        adminService.criarMateria(materiasResumo, professor_id);
-       return "redirect:/";  
+       return "redirect:/administrador";  
     }  
 
-    @PostMapping("/salvarProfessor")
+    @PostMapping("/administrador/salvarProfessor")
     public String criarProfessor(@ModelAttribute ProfessorDTO professorResumo){
         adminService.criarProfessor(professorResumo);
-        return "redirect:/";
+        return "redirect:/administrador";
     }
 
-    @PostMapping("/adicionarAlunoMateria/{materia_id}")
-    public String adicionarAlunoMateria(@PathVariable Integer materia_id, @RequestParam("aluno_id") Set<String> alunosId){
-        Set<Integer> alunos_id = alunosId.stream()
-            .map(Integer::parseInt)
-            .collect(Collectors.toSet());
+    @PostMapping("/administrador/adicionarAlunoMateria/{materia_id}")
+    public String adicionarAlunoMateria(@PathVariable Integer materia_id, @RequestParam(value = "aluno_id", required= false) Set<String> alunosId){
+        Set<Integer> alunos_id = null;
+        if (alunosId !=null && !alunosId.isEmpty()){
+            alunos_id = alunosId.stream()
+                .map(Integer::parseInt)
+                .collect(Collectors.toSet());
+        }
         adminService.adicionarAlunoMateria(materia_id, alunos_id);
-
-        return "redirect:/gerenciarMaterias";
+        return "redirect:/administrador/gerenciarMaterias";
     }
 
-    @PostMapping("/deletarAluno/{aluno_id}")
+    @PostMapping("/administrador/deletarAluno/{aluno_id}")
     public String deletarAluno(@PathVariable Integer aluno_id){
         adminService.excluirAluno(aluno_id);
-        return "redirect:/gerenciarAluno";
+        return "redirect:/administrador/gerenciarAluno";
     }
 
-    @PostMapping("/deletarProfessor/{professor_id}")
+    @PostMapping("/administrador/deletarProfessor/{professor_id}")
     public String deletarProfessor(@PathVariable Integer professor_id){
         adminService.excluirProfessor(professor_id);
-        return "redirect:/gerenciarProfessor";
+        return "redirect:/administrador/gerenciarProfessor";
     }
 
-    @GetMapping("/deletarProfessorMateria/{materia_id}")
+    @GetMapping("/administrador/deletarProfessorMateria/{materia_id}")
     public String deletarProfessorMateria(@PathVariable Integer materia_id){
         adminService.excluirProfessorMateria(materia_id);
-        return "redirect:/gerenciarMaterias";
+        return "redirect:/administrador/gerenciarMaterias";
     }
 
-    @GetMapping("/deletarMateria/{materia_id}")
+    @GetMapping("/administrador/deletarMateria/{materia_id}")
     public String deletarMateria(@PathVariable Integer materia_id){
         adminService.excluirMateria(materia_id);
-        return "redirect:/gerenciarMaterias";
+        return "redirect:/administrador/gerenciarMaterias";
     }
 
-    @PostMapping("/editarAluno/{aluno_id}")
+    @PostMapping("/administrador/editarAluno/{aluno_id}")
     public String editarAluno(@PathVariable Integer aluno_id, @ModelAttribute AlunoDTO alunoResumo){
         adminService.editarAluno(aluno_id, alunoResumo);
-        return "redirect:/gerenciarAluno";
+        return "redirect:/administrador/gerenciarAluno";
     }
 
-    @PostMapping("/editarProfessor/{professor_id}")
+    @PostMapping("/administrador/editarProfessor/{professor_id}")
     public String editarProfessor(@RequestParam(value="materia_id", required = false) Integer materia_id, @PathVariable Integer professor_id, @ModelAttribute ProfessorDTO professorResumo){
         adminService.editarProfessor(professor_id, professorResumo, materia_id);
-        return "redirect:/gerenciarProfessor";
+        return "redirect:/administrador/gerenciarProfessor";
     }
 }

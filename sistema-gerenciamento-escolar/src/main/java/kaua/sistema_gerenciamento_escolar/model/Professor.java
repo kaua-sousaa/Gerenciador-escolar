@@ -39,4 +39,7 @@ public class Professor {
 
     @Column(nullable = false)
     private LocalDate dataNascimento;
+
+    @Column(nullable = false)
+    private String role_nome;
 }

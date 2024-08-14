@@ -62,5 +62,8 @@ public class Aluno {
     @OneToMany(mappedBy = "aluno", fetch = FetchType.EAGER)
     @JsonManagedReference
     private List<Faltas> faltas;
+
+    @Column(nullable = false)
+    private String role_nome;
 }
 
