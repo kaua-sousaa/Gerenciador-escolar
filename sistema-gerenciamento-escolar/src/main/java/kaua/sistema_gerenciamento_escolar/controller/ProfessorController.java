@@ -22,22 +22,27 @@ import kaua.sistema_gerenciamento_escolar.dto.FaltaDTO;
 import kaua.sistema_gerenciamento_escolar.dto.MateriaDTO;
 import kaua.sistema_gerenciamento_escolar.dto.NotaDTO;
 import kaua.sistema_gerenciamento_escolar.dto.ProfessorDTO;
+import kaua.sistema_gerenciamento_escolar.service.AuthService;
 import kaua.sistema_gerenciamento_escolar.service.ProfessorService;
 
 @Controller
 public class ProfessorController {
     
-
     @Autowired
     private ProfessorService professorService;
 
+    @Autowired
+    private AuthService authService;
+
     @GetMapping("/professor")
     public String indexProfessor(Model model){
-        ProfessorDTO professorResumo = professorService.professorInformacoes(9);
-        List<MateriaDTO> materiasResumo = professorService.professorMaterias(9);
-        List<NotaDTO> notaResumo = professorService.professorNotas(9);
-        Set<FaltaDTO> faltaResumo = professorService.professorFaltas(9);
-        List<AlunoDTO> alunoResumo = professorService.alunosProfessor(9);
+        Integer id = authService.getIdAutenticado();
+
+        ProfessorDTO professorResumo = professorService.professorInformacoes(id);
+        List<MateriaDTO> materiasResumo = professorService.professorMaterias(id);
+        List<NotaDTO> notaResumo = professorService.professorNotas(id);
+        Set<FaltaDTO> faltaResumo = professorService.professorFaltas(id);
+        List<AlunoDTO> alunoResumo = professorService.alunosProfessor(id);
         
         //converter para usar no thymeleaf
         List<FaltaDTO> faltaResumoList = new ArrayList<>(faltaResumo);
@@ -55,8 +60,10 @@ public class ProfessorController {
 
     @GetMapping("/professor/professorTurmaGet/{materia_id}")
     public String professorTurmasGet(@PathVariable Integer materia_id, Model model){
-        List<AlunoDTO> alunoResumo = professorService.alunosProfessor(9);
-        List<MateriaDTO> materiasResumo = professorService.professorMaterias(9);
+        Integer id = authService.getIdAutenticado();
+
+        List<AlunoDTO> alunoResumo = professorService.alunosProfessor(id);
+        List<MateriaDTO> materiasResumo = professorService.professorMaterias(id);
         MateriaDTO materiaSelecionada = null;
         for (MateriaDTO materia : materiasResumo){
             if(materia.getId().equals(materia_id)){
@@ -71,14 +78,18 @@ public class ProfessorController {
 
     @GetMapping("/professor/professorFaltasGet/{materia_id}")
     public String aplicarFaltaGet(@PathVariable Integer materia_id, Model model){
-        List<AlunoDTO> alunosResumo = professorService.alunosProfessor(9);
+        Integer id = authService.getIdAutenticado();
+
+        List<AlunoDTO> alunosResumo = professorService.alunosProfessor(id);
         model.addAttribute("alunos", alunosResumo);
         return "professorFaltas";
     }
 
     @GetMapping("/professor/professorNotasGet/{materia_id}")
     public String aplicarNotasGet(@PathVariable Integer materia_id, Model model){
-        List<AlunoDTO> alunosResumo = professorService.alunosProfessor(9);
+        Integer id = authService.getIdAutenticado();
+
+        List<AlunoDTO> alunosResumo = professorService.alunosProfessor(id);
         Map<Integer, NotaDTO> notasMap = new HashMap<>();
         for (AlunoDTO aluno : alunosResumo){
             for(NotaDTO nota: aluno.getHistorico()){
@@ -94,7 +105,9 @@ public class ProfessorController {
 
     @GetMapping("/professor/professorMateriaGet")
     public String escolherMateriaFalta(Model model){
-        List<MateriaDTO> materiasResumo = professorService.professorMaterias(9);
+        Integer id = authService.getIdAutenticado();
+        
+        List<MateriaDTO> materiasResumo = professorService.professorMaterias(id);
         model.addAttribute("materias", materiasResumo);
 
         return "professorMateria";
